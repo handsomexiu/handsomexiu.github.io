@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>合并多个csv数据至一个csv中 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="a 合并多个csv方法1： 1234567891011121314import globimport osimport pandas as pdinputfile&#x3D;&amp;#x27;C:&#x2F;Users&#x2F;ll&#x2F;Desktop&#x2F;抽样后的数据&#x2F;*.csv&amp;#x27;#这儿的*相当于指代全部的意思outputfile&#x3D;&amp;#x27;C:&#x2F;Users&#x2F;ll&#x2F;Desktop&#x2F;testtall.csv&amp;#x27;csv_">
+  <meta name="description" content="合并多个csv方法1： 1234567891011121314import globimport osimport pandas as pdinputfile&#x3D;&amp;#x27;C:&#x2F;Users&#x2F;ll&#x2F;Desktop&#x2F;抽样后的数据&#x2F;*.csv&amp;#x27;#这儿的*相当于指代全部的意思outputfile&#x3D;&amp;#x27;C:&#x2F;Users&#x2F;ll&#x2F;Desktop&#x2F;testtall.csv&amp;#x27;csv_li">
 <meta property="og:type" content="article">
 <meta property="og:title" content="合并多个csv数据至一个csv中">
 <meta property="og:url" content="http://example.com/2021/12/21/%E5%90%88%E5%B9%B6%E5%A4%9A%E4%B8%AAcsv%E6%95%B0%E6%8D%AE%E8%87%B3%E4%B8%80%E4%B8%AAcsv%E4%B8%AD/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="a 合并多个csv方法1： 1234567891011121314import globimport osimport pandas as pdinputfile&#x3D;&amp;#x27;C:&#x2F;Users&#x2F;ll&#x2F;Desktop&#x2F;抽样后的数据&#x2F;*.csv&amp;#x27;#这儿的*相当于指代全部的意思outputfile&#x3D;&amp;#x27;C:&#x2F;Users&#x2F;ll&#x2F;Desktop&#x2F;testtall.csv&amp;#x27;csv_">
+<meta property="og:description" content="合并多个csv方法1： 1234567891011121314import globimport osimport pandas as pdinputfile&#x3D;&amp;#x27;C:&#x2F;Users&#x2F;ll&#x2F;Desktop&#x2F;抽样后的数据&#x2F;*.csv&amp;#x27;#这儿的*相当于指代全部的意思outputfile&#x3D;&amp;#x27;C:&#x2F;Users&#x2F;ll&#x2F;Desktop&#x2F;testtall.csv&amp;#x27;csv_li">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-12-21T03:28:22.000Z">
-<meta property="article:modified_time" content="2021-12-21T03:38:25.100Z">
+<meta property="article:modified_time" content="2021-12-21T03:40:42.869Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -174,14 +174,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>a</p>
-<p>合并多个csv方法1：</p>
+        <p><strong>合并多个csv方法1：</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> glob</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">inputfile=<span class="string">&#x27;C:/Users/ll/Desktop/抽样后的数据/*.csv&#x27;</span><span class="comment">#这儿的*相当于指代全部的意思</span></span><br><span class="line">outputfile=<span class="string">&#x27;C:/Users/ll/Desktop/testtall.csv&#x27;</span></span><br><span class="line">csv_list = glob.glob(inputfile)</span><br><span class="line">filepath =  csv_list [<span class="number">0</span>]</span><br><span class="line">df = pd.read_csv(filepath,encoding=<span class="string">&quot;gbk&quot;</span>,low_memory=<span class="literal">False</span>)</span><br><span class="line">df = df.to_csv(outputfile,encoding=<span class="string">&quot;gbk&quot;</span>,index=<span class="literal">False</span>) </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="built_in">len</span>(csv_list)):</span><br><span class="line">    filepath = csv_list [i]</span><br><span class="line">    df = pd.read_csv(filepath,encoding=<span class="string">&quot;gbk&quot;</span>,low_memory=<span class="literal">False</span>)</span><br><span class="line">    df = df.to_csv(outputfile,encoding=<span class="string">&quot;gbk&quot;</span>,index=<span class="literal">False</span>,header=<span class="literal">False</span>,mode=<span class="string">&#x27;a+&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>方法2：</p>
+<p><strong>方法2：</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">path=<span class="string">&#x27;C:/Users/ll/Desktop/抽样后的数据/&#x27;</span></span><br><span class="line">outputfile=<span class="string">&#x27;C:/Users/ll/Desktop/testtall_2.csv&#x27;</span></span><br><span class="line">dirs = os.listdir( path )<span class="comment">#用于文件的批处理</span></span><br><span class="line">file=path+dirs[<span class="number">0</span>]</span><br><span class="line">df = pd.read_csv(file,encoding=<span class="string">&quot;gbk&quot;</span>,low_memory=<span class="literal">False</span>)</span><br><span class="line">df = df.to_csv(outputfile,encoding=<span class="string">&quot;gbk&quot;</span>,index=<span class="literal">False</span>) </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">4033</span>):</span><br><span class="line">    file=path+dirs[i]</span><br><span class="line">    df = pd.read_csv(file,encoding=<span class="string">&quot;gbk&quot;</span>,low_memory=<span class="literal">False</span>)</span><br><span class="line">    df = df.to_csv(outputfile,encoding=<span class="string">&quot;gbk&quot;</span>,index=<span class="literal">False</span>,header=<span class="literal">False</span>,mode=<span class="string">&#x27;a+&#x27;</span>)</span><br></pre></td></tr></table></figure>
 
-<p>方法1的引用来源</p>
+<p><strong>方法1的引用来源</strong></p>
 
       
 
