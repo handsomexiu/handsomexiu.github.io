@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>My New Post</title>
-    <url>/2023/06/24/My-New-Post/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>First-Hello World</title>
     <url>/2023/06/24/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
@@ -28,5 +23,10 @@
 <p>会有一点延迟，更新得等一会</p>
 <h3 id="显示部分内容"><a href="#显示部分内容" class="headerlink" title="显示部分内容"></a>显示部分内容</h3><p>在你写 md 文章的时候，可以在内容中加上 <code>&lt;!--more--&gt;</code>，这样首页和列表页展示的文章内容就是 <code>&lt;!--more--&gt;</code> 之前的文字，而之后的就不会显示了。</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>My New Post</title>
+    <url>/2023/06/24/My-New-Post/</url>
+    <content><![CDATA[]]></content>
   </entry>
 </search>
