@@ -1,50 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>GAT和GCN中的注意事项</title>
-    <url>/2023/08/24/GAT%E5%92%8CGCN%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
-    <content><![CDATA[<h1 id="“Inductive-learning”-and-“Transductive-learning”"><a href="#“Inductive-learning”-and-“Transductive-learning”" class="headerlink" title="“Inductive learning” and “Transductive learning”"></a>“Inductive learning” and “Transductive learning”</h1><p>“Inductive learning”意为归纳学习，“Transductive learning”意为直推学习</p>
-<p>对于GCN而言我们认为其是：直推学习，也就是说当测试集出现了训练集未学习过的节点时即图结构发生了变化时，网络需要重新训练。</p>
-<p>对于GAT而言：归纳学习；也就是训练阶段见不到的数据（在图书剧中可以指新的节点，也可以指新的图）                                                                                                                                        直接进行预测而不需要重新训练。</p>
-<p>GCN就像是没有权重的GAT一样，见如下公式：<br>$$<br>GCN&#x3D;\tilde{A}XW \<br>GAT&#x3D;(\tilde A \odot M)XW<br>$$</p>
-<p>这里的需不需要重新训练围殴认为是其关注的重点，对于GCN而言重点关注的<strong>图的全局结构</strong>，因此当图的结果变换的时候自然需要重新训练。</p>
-<p>而对于GAT而言虽说用到了邻接矩阵，但训练的目标是&#x3D;&#x3D;中心节点&#x3D;&#x3D;和&#x3D;&#x3D;邻居节点&#x3D;&#x3D;间的聚合操作。</p>
-<p>某种意义上来说，GCN是一种考虑了整体图结构的方法；而GAT一定程度上放弃了整体结构，这使得其能够完成Inductive任务。<br>链接：<a href="https://www.zhihu.com/question/409415383/answer/1361505060">https://www.zhihu.com/question/409415383/answer/1361505060</a></p>
-<p>其实是否确保inductive，本质上在于两点：首先是你要确保你这个算法的node-level input不能是one hot而必须是实在的node attribute，一旦onehot了就必是只能transductive，原因显然。其次是training方式，不能是依赖于整图的矩阵运算，而必须是graphsage里面appendix a的minibatch training模式下的分割方案，而这才是graphsage有底气说自己inductive牛逼的主要原因。你确保这两点，几乎现在市面上所有message passing架构的gnn都是inductive的。<br>链接：<a href="https://www.zhihu.com/question/409415383/answer/1361596817">https://www.zhihu.com/question/409415383/answer/1361596817</a></p>
-]]></content>
+<search> 
+  
+  
+    
+    <entry>
+      <title>GAT和GCN中的注意事项</title>
+      <link href="/2023/08/24/GAT%E5%92%8CGCN%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/"/>
+      <url>/2023/08/24/GAT%E5%92%8CGCN%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
+      
+        <content type="html"><![CDATA[<h1 id="“Inductive-learning”-and-“Transductive-learning”"><a href="#“Inductive-learning”-and-“Transductive-learning”" class="headerlink" title="“Inductive learning” and “Transductive learning”"></a>“Inductive learning” and “Transductive learning”</h1><p>“Inductive learning”意为归纳学习，“Transductive learning”意为直推学习</p><p>对于GCN而言我们认为其是：直推学习，也就是说当测试集出现了训练集未学习过的节点时即图结构发生了变化时，网络需要重新训练。</p><p>对于GAT而言：归纳学习；也就是训练阶段见不到的数据（在图书剧中可以指新的节点，也可以指新的图）                                                                                                                                        直接进行预测而不需要重新训练。</p><span id="more"></span><p>GCN就像是没有权重的GAT一样，见如下公式：<br>$$<br>GCN&#x3D;\tilde{A}XW \<br>GAT&#x3D;(\tilde A \odot M)XW<br>$$</p><p>这里的需不需要重新训练围殴认为是其关注的重点，对于GCN而言重点关注的<strong>图的全局结构</strong>，因此当图的结果变换的时候自然需要重新训练。</p><p>而对于GAT而言虽说用到了邻接矩阵，但训练的目标是&#x3D;&#x3D;中心节点&#x3D;&#x3D;和&#x3D;&#x3D;邻居节点&#x3D;&#x3D;间的聚合操作。</p><p>某种意义上来说，GCN是一种考虑了整体图结构的方法；而GAT一定程度上放弃了整体结构，这使得其能够完成Inductive任务。<br>链接：<a href="https://www.zhihu.com/question/409415383/answer/1361505060">https://www.zhihu.com/question/409415383/answer/1361505060</a></p><p>其实是否确保inductive，本质上在于两点：首先是你要确保你这个算法的node-level input不能是one hot而必须是实在的node attribute，一旦onehot了就必是只能transductive，原因显然。其次是training方式，不能是依赖于整图的矩阵运算，而必须是graphsage里面appendix a的minibatch training模式下的分割方案，而这才是graphsage有底气说自己inductive牛逼的主要原因。你确保这两点，几乎现在市面上所有message passing架构的gnn都是inductive的。<br>链接：<a href="https://www.zhihu.com/question/409415383/answer/1361596817">https://www.zhihu.com/question/409415383/answer/1361596817</a></p>]]></content>
+      
+      
       <categories>
-        <category>GNN</category>
+          
+          <category> GNN </category>
+          
       </categories>
-      <tags>
-        <tag>GNN</tag>
-        <tag>深度学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>First-Hello World</title>
-    <url>/2023/06/24/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-<h3 id="GitHub同步"><a href="#GitHub同步" class="headerlink" title="GitHub同步"></a>GitHub同步</h3><p>hexo clean</p>
-<p>hexo d -g</p>
-<p>会有一点延迟，更新得等一会</p>
-<h3 id="显示部分内容"><a href="#显示部分内容" class="headerlink" title="显示部分内容"></a>显示部分内容</h3><p>在你写 md 文章的时候，可以在内容中加上 <code>&lt;!--more--&gt;</code>，这样首页和列表页展示的文章内容就是 <code>&lt;!--more--&gt;</code> 之前的文字，而之后的就不会显示了。</p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> GNN </tag>
+            
+            <tag> 深度学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>First-Hello World</title>
+      <link href="/2023/06/24/hello-world/"/>
+      <url>/2023/06/24/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><span id="more"></span><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p><h3 id="GitHub同步"><a href="#GitHub同步" class="headerlink" title="GitHub同步"></a>GitHub同步</h3><p>hexo clean</p><p>hexo d -g</p><p>会有一点延迟，更新得等一会</p><h3 id="显示部分内容"><a href="#显示部分内容" class="headerlink" title="显示部分内容"></a>显示部分内容</h3><p>在你写 md 文章的时候，可以在内容中加上 <code>&lt;!--more--&gt;</code>，这样首页和列表页展示的文章内容就是 <code>&lt;!--more--&gt;</code> 之前的文字，而之后的就不会显示了。</p>]]></content>
+      
+      
       <categories>
-        <category>软件使用</category>
+          
+          <category> 软件使用 </category>
+          
       </categories>
-  </entry>
+      
+      
+    </entry>
+    
+    
+  
+  
 </search>
