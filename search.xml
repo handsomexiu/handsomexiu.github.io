@@ -3,13 +3,21 @@
   <entry>
     <title>GAT和GCN中的注意事项</title>
     <url>/2023/08/24/GAT%E5%92%8CGCN%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
-    <content><![CDATA[<p> 这是关于</p>
+    <content><![CDATA[<h1 id="“Inductive-learning”-and-“Transductive-learning”"><a href="#“Inductive-learning”-and-“Transductive-learning”" class="headerlink" title="“Inductive learning” and “Transductive learning”"></a>“Inductive learning” and “Transductive learning”</h1><p>“Inductive learning”意为归纳学习，“Transductive learning”意为直推学习</p>
+<p>对于GCN而言我们认为其是：直推学习，也就是说当测试集出现了训练集未学习过的节点时即图结构发生了变化时，网络需要重新训练。</p>
+<p>对于GAT而言：归纳学习；也就是训练阶段见不到的数据（在图书剧中可以指新的节点，也可以指新的图）                                                                                                                                        直接进行预测而不需要重新训练。</p>
+<p>GCN就像是没有权重的GAT一样，见如下公式：<br>$$<br>GCN&#x3D;\tilde{A}XW \<br>GAT&#x3D;(\tilde A \odot M)XW<br>$$</p>
+<p>这里的需不需要重新训练围殴认为是其关注的重点，对于GCN而言重点关注的<strong>图的全局结构</strong>，因此当图的结果变换的时候自然需要重新训练。</p>
+<p>而对于GAT而言虽说用到了邻接矩阵，但训练的目标是&#x3D;&#x3D;中心节点&#x3D;&#x3D;和&#x3D;&#x3D;邻居节点&#x3D;&#x3D;间的聚合操作。</p>
+<p>某种意义上来说，GCN是一种考虑了整体图结构的方法；而GAT一定程度上放弃了整体结构，这使得其能够完成Inductive任务。<br>链接：<a href="https://www.zhihu.com/question/409415383/answer/1361505060">https://www.zhihu.com/question/409415383/answer/1361505060</a></p>
+<p>其实是否确保inductive，本质上在于两点：首先是你要确保你这个算法的node-level input不能是one hot而必须是实在的node attribute，一旦onehot了就必是只能transductive，原因显然。其次是training方式，不能是依赖于整图的矩阵运算，而必须是graphsage里面appendix a的minibatch training模式下的分割方案，而这才是graphsage有底气说自己inductive牛逼的主要原因。你确保这两点，几乎现在市面上所有message passing架构的gnn都是inductive的。<br>链接：<a href="https://www.zhihu.com/question/409415383/answer/1361596817">https://www.zhihu.com/question/409415383/answer/1361596817</a></p>
 ]]></content>
       <categories>
         <category>GNN</category>
       </categories>
       <tags>
         <tag>GNN</tag>
+        <tag>深度学习</tag>
       </tags>
   </entry>
   <entry>
