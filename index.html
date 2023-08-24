@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"giscus","storage":true,"lazyload":false,"nav":null,"activeClass":"giscus"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null,"show_result":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"giscus","storage":true,"lazyload":false,"nav":null,"activeClass":"giscus"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="他强任他强，清风拂山岗">
 <meta property="og:type" content="website">
@@ -227,7 +227,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2023-08-24 20:51:05 / 修改时间：21:09:59" itemprop="dateCreated datePublished" datetime="2023-08-24T20:51:05+08:00">2023-08-24</time>
+      <time title="创建时间：2023-08-24 20:51:05 / 修改时间：21:20:44" itemprop="dateCreated datePublished" datetime="2023-08-24T20:51:05+08:00">2023-08-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -264,58 +264,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <span id="more"></span>
-<h1 id="这是关于torchautogradfunction"><a class="markdownIt-Anchor" href="#这是关于torchautogradfunction"></a> 这是关于torch.autograd.Function</h1>
+          <h1 id="这是关于torchautogradfunction"><a class="markdownIt-Anchor" href="#这是关于torchautogradfunction"></a> 这是关于torch.autograd.Function</h1>
 <p>在 PyTorch 中，<code>torch.autograd.Function</code> 是一个基础类，用于定义自定义的autograd函数，使你能够实现任意的前向传播和反向传播操作。这对于实现自定义的操作和损失函数，或者对已有操作进行修改，都非常有用。</p>
-<p>要使用 <code>torch.autograd.Function</code>，你需要创建一个继承自它的子类，并实现以下两个方法：<code>forward</code> 和 <code>backward</code>。</p>
-<ol>
-<li>
-<p><code>forward</code> 方法：<br>
-这个方法定义了自定义函数的前向传播过程。它接收输入张量或其他变量作为参数，并返回计算结果。在 <code>forward</code> 方法中，你可以执行任意计算，包括创建新的张量和执行运算符。</p>
-</li>
-<li>
-<p><code>backward</code> 方法：<br>
-这个方法定义了自定义函数的反向传播过程。它接收关于输出的梯度（通常是一个梯度张量）作为参数，并计算相对于输入的梯度。在 <code>backward</code> 方法中，你需要计算输入变量的梯度，以便在整个计算图中进行梯度传播。</p>
-</li>
-</ol>
-<p>以下是一个简单的示例，演示如何使用 <code>torch.autograd.Function</code> 来实现一个自定义函数：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyFunction</span>(torch.autograd.Function):</span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">ctx, <span class="built_in">input</span></span>):</span><br><span class="line">        <span class="comment"># 在 forward 方法中执行前向传播计算</span></span><br><span class="line">        ctx.save_for_backward(<span class="built_in">input</span>)</span><br><span class="line">        output = <span class="built_in">input</span> * <span class="number">2</span></span><br><span class="line">        <span class="keyword">return</span> output</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">backward</span>(<span class="params">ctx, grad_output</span>):</span><br><span class="line">        <span class="comment"># 在 backward 方法中计算梯度</span></span><br><span class="line">        <span class="built_in">input</span>, = ctx.saved_tensors</span><br><span class="line">        grad_input = grad_output * <span class="number">2</span></span><br><span class="line">        <span class="keyword">return</span> grad_input</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用自定义函数</span></span><br><span class="line">x = torch.tensor([<span class="number">1.0</span>], requires_grad=<span class="literal">True</span>)</span><br><span class="line">y = MyFunction.apply(x)</span><br><span class="line">y.backward()</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Input gradient:&quot;</span>, x.grad)</span><br><span class="line"><span class="built_in">print</span>(y)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">Input gradient: tensor([2.])</span></span><br><span class="line"><span class="string">tensor([2.], grad_fn=&lt;MyFunctionBackward&gt;)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
-<p>在这个示例中，<code>MyFunction</code> 继承自 <code>torch.autograd.Function</code>，并实现了 <code>forward</code> 和 <code>backward</code> 方法。你可以通过 <code>MyFunction.apply()</code> 来使用这个自定义函数。在后续的反向传播中，PyTorch 将会使用 <code>backward</code> 方法计算梯度。</p>
-<p>这就是如何使用 <code>torch.autograd.Function</code> 来实现自定义函数，并在自定义的计算中使用 PyTorch 的自动微分。</p>
-<ul>
-<li>
-<p><code>@staticmethod</code> 是 Python 中的一个装饰器（Decorator），用于将一个方法定义为静态方法。静态方法是指在类中定义的方法，不依赖于类的实例，因此可以直接通过类名调用，而不需要创建类的对象实例。</p>
-<p>在你提供的代码中，<code>@staticmethod</code> 装饰器用于将方法定义为静态方法。具体来说，它用于 <code>SpecialSpmmFunction</code> 类中的两个方法：<code>forward</code> 和 <code>backward</code>。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SpecialSpmmFunction</span>(torch.autograd.Function):</span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">ctx, indices, values, shape, b</span>):</span><br><span class="line">        <span class="comment"># ... implementation ...</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">backward</span>(<span class="params">ctx, grad_output</span>):</span><br><span class="line">        <span class="comment"># ... implementation ...</span></span><br></pre></td></tr></table></figure>
-<p>通过将这两个方法定义为静态方法，你可以在不创建类的实例的情况下，直接通过类名调用这些方法。例如：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">indices = ...</span><br><span class="line">values = ...</span><br><span class="line">shape = ...</span><br><span class="line">b = ...</span><br><span class="line">result = SpecialSpmmFunction.forward(indices, values, shape, b)</span><br></pre></td></tr></table></figure>
-<p>这种方法非常适合在定义类的方法时，不需要访问实例属性或方法，或者在类的实例不存在的情况下执行一些操作。静态方法不会自动接收类的实例作为第一个参数（通常是 <code>self</code>），因此它们不依赖于类的状态。</p>
-</li>
-<li>
-<p>在上面的代码中，<code>y = MyFunction.apply(x)</code> 这一行代码是通过调用 <code>MyFunction</code> 类的 <code>apply</code> 方法来计算前向传播的结果 <code>y</code>。在这个特定的示例中，<code>MyFunction</code> 类的 <code>forward</code> 方法执行的操作是将输入张量 <code>x</code> 乘以 2，因此 <code>y</code> 的值将是 <code>x</code> 的两倍。</p>
-<p>这里，<code>MyFunction.apply(x)</code> 实际上是在前向传播中使用了自定义的操作，并返回计算得到的输出。因为我们定义了自定义函数 <code>MyFunction</code> 的 <code>forward</code> 方法，所以调用 <code>.apply(x)</code> 实际上就是调用了我们自己实现的操作。</p>
-<p>在更复杂的情况下，自定义函数可能会执行许多不同的操作，从而实现复杂的前向传播。<code>apply</code> 方法允许我们将输入传递给这些操作，并返回输出。通常情况下，PyTorch 的模块和函数也是这样工作的，只是在内部使用了更多的优化和组件。</p>
-<p>简而言之，<code>y = MyFunction.apply(x)</code> 将会调用自定义函数 <code>MyFunction</code> 的前向传播方法，执行该方法中的操作，并将操作的结果存储在 <code>y</code> 中。</p>
-</li>
-<li>
-<p>对于print(y)</p>
-<ul>
-<li>
-<p>在上面的代码中，<code>y = MyFunction.apply(x)</code> 这一行代码是通过调用 <code>MyFunction</code> 类的 <code>apply</code> 方法来计算<strong>前向传播的结果</strong> <code>y</code>。在这个特定的示例中，<code>MyFunction</code> 类的 <code>forward</code> 方法执行的操作是将输入张量 <code>x</code> 乘以 2，因此 <code>y</code> 的值将是 <code>x</code> 的两倍。</p>
-<p>这里，<code>MyFunction.apply(x)</code> 实际上是在前向传播中使用了自定义的操作，并返回计算得到的输出。因为我们定义了自定义函数 <code>MyFunction</code> 的 <code>forward</code> 方法，所以调用 <code>.apply(x)</code> 实际上就是调用了我们自己实现的操作。</p>
-<p>在更复杂的情况下，自定义函数可能会执行许多不同的操作，从而实现复杂的前向传播。<code>apply</code> 方法允许我们将输入传递给这些操作，并返回输出。通常情况下，PyTorch 的模块和函数也是这样工作的，只是在内部使用了更多的优化和组件。</p>
-<p>简而言之，<code>y = MyFunction.apply(x)</code> 将会调用自定义函数 <code>MyFunction</code> 的前向传播方法，执行该方法中的操作，并将操作的结果存储在 <code>y</code> 中。</p>
-</li>
-</ul>
-</li>
-<li>
-<p>如果令c=y.backward(),print©输出的结果为None</p>
-</li>
-<li>
-<p>如果将y.backward()注释掉，print(“Input gradient:”, x.grad)为Input gradient:None</p>
-</li>
-</ul>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/24/pytorch-torch-autograd-Function/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -868,6 +826,9 @@
         ta.focus()
         var result = document.execCommand('copy')
         document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
         
         $(this).blur()
       })).on('mouseleave', function (e) {
