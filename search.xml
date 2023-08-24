@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>GAT和GCN中的注意事项</title>
+    <url>/2023/08/24/GAT%E5%92%8CGCN%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
+    <content><![CDATA[<p> 这是关于</p>
+]]></content>
+      <categories>
+        <category>GNN</category>
+      </categories>
+      <tags>
+        <tag>GNN</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>First-Hello World</title>
     <url>/2023/06/24/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
@@ -23,17 +35,8 @@
 <p>会有一点延迟，更新得等一会</p>
 <h3 id="显示部分内容"><a href="#显示部分内容" class="headerlink" title="显示部分内容"></a>显示部分内容</h3><p>在你写 md 文章的时候，可以在内容中加上 <code>&lt;!--more--&gt;</code>，这样首页和列表页展示的文章内容就是 <code>&lt;!--more--&gt;</code> 之前的文字，而之后的就不会显示了。</p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>GAT和GCN中的注意事项</title>
-    <url>/2023/08/24/GAT%E5%92%8CGCN%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
-    <content><![CDATA[<p> 这是关于</p>
-]]></content>
       <categories>
-        <category>GNN</category>
+        <category>软件使用</category>
       </categories>
-      <tags>
-        <tag>GNN</tag>
-      </tags>
   </entry>
 </search>
