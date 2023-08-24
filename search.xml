@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>GAT和GCN中的注意事项</title>
+    <url>/2023/08/24/GAT%E5%92%8CGCN%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
+    <content><![CDATA[<h1 id="inductive-learning-and-transductive-learning"><a class="markdownIt-Anchor" href="#inductive-learning-and-transductive-learning"></a> “Inductive learning” and “Transductive learning”</h1>
+<p>“Inductive learning”意为归纳学习，“Transductive learning”意为直推学习</p>
+<p>对于GCN而言我们认为其是：直推学习，也就是说当测试集出现了训练集未学习过的节点时即图结构发生了变化时，网络需要重新训练。</p>
+<p>对于GAT而言：归纳学习；也就是训练阶段见不到的数据（在图书剧中可以指新的节点，也可以指新的图）                                                                                                                                        直接进行预测而不需要重新训练。</p>
+<span id="more"></span>
+<p>GCN就像是没有权重的GAT一样，见如下公式：</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>G</mi><mi>C</mi><mi>N</mi><mo>=</mo><mover accent="true"><mi>A</mi><mo>~</mo></mover><mi>X</mi><mi>W</mi><mspace linebreak="newline"></mspace><mi>G</mi><mi>A</mi><mi>T</mi><mo>=</mo><mo stretchy="false">(</mo><mover accent="true"><mi>A</mi><mo>~</mo></mover><mo>⊙</mo><mi>M</mi><mo stretchy="false">)</mo><mi>X</mi><mi>W</mi></mrow><annotation encoding="application/x-tex">GCN=\tilde{A}XW \\
+GAT=(\tilde A \odot M)XW
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9201899999999998em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9201899999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">A</span></span></span><span style="top:-3.6023300000000003em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.11110999999999999em;"><span class="mord">~</span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.1701899999999998em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9201899999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">A</span></span><span style="top:-3.6023300000000003em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.11110999999999999em;"><span class="mord">~</span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊙</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span></span></span></span></span></p>
+<p>这里的需不需要重新训练围殴认为是其关注的重点，对于GCN而言重点关注的<strong>图的全局结构</strong>，因此当图的结果变换的时候自然需要重新训练。</p>
+<p>而对于GAT而言虽说用到了邻接矩阵，但训练的目标是<mark>中心节点</mark>和<mark>邻居节点</mark>间的聚合操作。</p>
+<p>某种意义上来说，GCN是一种考虑了整体图结构的方法；而GAT一定程度上放弃了整体结构，这使得其能够完成Inductive任务。<br>
+链接：<a href="https://www.zhihu.com/question/409415383/answer/1361505060">https://www.zhihu.com/question/409415383/answer/1361505060</a></p>
+<p>其实是否确保inductive，本质上在于两点：首先是你要确保你这个算法的node-level input不能是one hot而必须是实在的node attribute，一旦onehot了就必是只能transductive，原因显然。其次是training方式，不能是依赖于整图的矩阵运算，而必须是graphsage里面appendix a的minibatch training模式下的分割方案，而这才是graphsage有底气说自己inductive牛逼的主要原因。你确保这两点，几乎现在市面上所有message passing架构的gnn都是inductive的。<br>
+链接：<a href="https://www.zhihu.com/question/409415383/answer/1361596817">https://www.zhihu.com/question/409415383/answer/1361596817</a></p>
+]]></content>
+      <categories>
+        <category>GNN</category>
+      </categories>
+      <tags>
+        <tag>GNN</tag>
+        <tag>深度学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>用户新增预测挑战赛</title>
+    <url>/2023/08/24/%E7%94%A8%E6%88%B7%E6%96%B0%E5%A2%9E%E9%A2%84%E6%B5%8B%E6%8C%91%E6%88%98%E8%B5%9B/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>竞赛</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>First-Hello World</title>
     <url>/2023/06/24/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
@@ -88,20 +127,8 @@
         <category>pytorch</category>
       </categories>
       <tags>
-        <tag>计算机语言</tag>
         <tag>深度学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>用户新增预测挑战赛</title>
-    <url>/2023/08/24/%E7%94%A8%E6%88%B7%E6%96%B0%E5%A2%9E%E9%A2%84%E6%B5%8B%E6%8C%91%E6%88%98%E8%B5%9B/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>竞赛</tag>
+        <tag>计算机语言</tag>
       </tags>
   </entry>
   <entry>
@@ -131,35 +158,8 @@
         <category>pytorch</category>
       </categories>
       <tags>
+        <tag>深度学习</tag>
         <tag>计算机语言</tag>
-        <tag>深度学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>GAT和GCN中的注意事项</title>
-    <url>/2023/08/24/GAT%E5%92%8CGCN%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
-    <content><![CDATA[<h1 id="inductive-learning-and-transductive-learning"><a class="markdownIt-Anchor" href="#inductive-learning-and-transductive-learning"></a> “Inductive learning” and “Transductive learning”</h1>
-<p>“Inductive learning”意为归纳学习，“Transductive learning”意为直推学习</p>
-<p>对于GCN而言我们认为其是：直推学习，也就是说当测试集出现了训练集未学习过的节点时即图结构发生了变化时，网络需要重新训练。</p>
-<p>对于GAT而言：归纳学习；也就是训练阶段见不到的数据（在图书剧中可以指新的节点，也可以指新的图）                                                                                                                                        直接进行预测而不需要重新训练。</p>
-<span id="more"></span>
-<p>GCN就像是没有权重的GAT一样，见如下公式：</p>
-<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>G</mi><mi>C</mi><mi>N</mi><mo>=</mo><mover accent="true"><mi>A</mi><mo>~</mo></mover><mi>X</mi><mi>W</mi><mspace linebreak="newline"></mspace><mi>G</mi><mi>A</mi><mi>T</mi><mo>=</mo><mo stretchy="false">(</mo><mover accent="true"><mi>A</mi><mo>~</mo></mover><mo>⊙</mo><mi>M</mi><mo stretchy="false">)</mo><mi>X</mi><mi>W</mi></mrow><annotation encoding="application/x-tex">GCN=\tilde{A}XW \\
-GAT=(\tilde A \odot M)XW
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9201899999999998em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9201899999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">A</span></span></span><span style="top:-3.6023300000000003em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.11110999999999999em;"><span class="mord">~</span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.1701899999999998em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9201899999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">A</span></span><span style="top:-3.6023300000000003em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.11110999999999999em;"><span class="mord">~</span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊙</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span></span></span></span></span></p>
-<p>这里的需不需要重新训练围殴认为是其关注的重点，对于GCN而言重点关注的<strong>图的全局结构</strong>，因此当图的结果变换的时候自然需要重新训练。</p>
-<p>而对于GAT而言虽说用到了邻接矩阵，但训练的目标是<mark>中心节点</mark>和<mark>邻居节点</mark>间的聚合操作。</p>
-<p>某种意义上来说，GCN是一种考虑了整体图结构的方法；而GAT一定程度上放弃了整体结构，这使得其能够完成Inductive任务。<br>
-链接：<a href="https://www.zhihu.com/question/409415383/answer/1361505060">https://www.zhihu.com/question/409415383/answer/1361505060</a></p>
-<p>其实是否确保inductive，本质上在于两点：首先是你要确保你这个算法的node-level input不能是one hot而必须是实在的node attribute，一旦onehot了就必是只能transductive，原因显然。其次是training方式，不能是依赖于整图的矩阵运算，而必须是graphsage里面appendix a的minibatch training模式下的分割方案，而这才是graphsage有底气说自己inductive牛逼的主要原因。你确保这两点，几乎现在市面上所有message passing架构的gnn都是inductive的。<br>
-链接：<a href="https://www.zhihu.com/question/409415383/answer/1361596817">https://www.zhihu.com/question/409415383/answer/1361596817</a></p>
-]]></content>
-      <categories>
-        <category>GNN</category>
-      </categories>
-      <tags>
-        <tag>深度学习</tag>
-        <tag>GNN</tag>
       </tags>
   </entry>
 </search>
