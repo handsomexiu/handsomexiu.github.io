@@ -30,6 +30,35 @@ GAT=(\tilde A \odot M)XW
       </tags>
   </entry>
   <entry>
+    <title>First-Hello World</title>
+    <url>/2023/06/24/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+<h2 id="quick-start"><a class="markdownIt-Anchor" href="#quick-start"></a> Quick Start</h2>
+<h3 id="create-a-new-post"><a class="markdownIt-Anchor" href="#create-a-new-post"></a> Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="run-server"><a class="markdownIt-Anchor" href="#run-server"></a> Run server</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="generate-static-files"><a class="markdownIt-Anchor" href="#generate-static-files"></a> Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="deploy-to-remote-sites"><a class="markdownIt-Anchor" href="#deploy-to-remote-sites"></a> Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h3 id="github同步"><a class="markdownIt-Anchor" href="#github同步"></a> GitHub同步</h3>
+<p>hexo clean</p>
+<p>hexo d -g</p>
+<p>会有一点延迟，更新得等一会</p>
+<h3 id="显示部分内容"><a class="markdownIt-Anchor" href="#显示部分内容"></a> 显示部分内容</h3>
+<p>在你写 md 文章的时候，可以在内容中加上 <code>&lt;!--more--&gt;</code>，这样首页和列表页展示的文章内容就是 <code>&lt;!--more--&gt;</code> 之前的文字，而之后的就不会显示了。</p>
+]]></content>
+      <categories>
+        <category>软件使用</category>
+      </categories>
+  </entry>
+  <entry>
     <title>QCNext:何为下一代？</title>
     <url>/2023/09/02/QCNext-%E4%BD%95%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%BB%A3%EF%BC%9F/</url>
     <content><![CDATA[<p>这是一篇关于轨迹预测的文章，文章主要介绍了轨迹预测的论文《QCNeXt: A Next-Generation Framework For Joint Multi-Agent Trajectory Prediction》。文章对论文进行了翻译和分析，并就下一代进行了讨论。笔者论文阅读量不够，遇到错误还麻烦指出，十分感谢！</p>
@@ -62,11 +91,11 @@ GAT=(\tilde A \odot M)XW
 <h2 id="approach"><a class="markdownIt-Anchor" href="#approach"></a> approach</h2>
 <h3 id="query-centric-scene-encoder"><a class="markdownIt-Anchor" href="#query-centric-scene-encoder"></a> Query-Centric Scene Encoder</h3>
 <p>论文的场景编码器与 QCNet [5] 中使用的相同，它是一种基于分解注意力的 Transformer，可以捕获时间依赖性、智能体映射交互和社交交互。编码器的整体架构如图1所示。</p>
-<img src="/.com//QCNext-何为下一代？\image-20230902165946533.png" alt="image-20230902165946533" style="zoom: 80%;">
+<img src="/.com//image-20230902165946533.png" alt="image-20230902165946533" style="zoom: 80%;">
 <p>论文采用 QCNet 中以查询为中心的范例来对场景元素进行编码。这种编码范式背后的哲学是相对时空，它指导论文为模型配备空间维度的旋转平移不变性和时间维度的平移不变性。在该范式中，为每个场景元素建立局部时空坐标系，包括车道、人行横道、车辆、行人等。然后将这些场景元素编码在其局部坐标系中以产生不变的表示，场景元素之间的关系为Transformers 在相对时空位置嵌入的帮助下捕获。具体来说，在执行 QKV 注意力之前，注意力层中的键/值元素与相对于查询元素的时空位置嵌入相连接。在地图-地图注意力以及一系列时间注意力、智能体-地图注意力和社会注意力之后，场景编码器产生形状 [M, D] 的地图编码和形状 [A, T, D] 的智能体编码，其中 M 、 A 、 T 、 D 分别是地图多边形、建模智能体、历史时间步和隐藏单元的数量。这些编码稍后将用作解码器中的场景上下文。</p>
 <h3 id="multi-agent-detr-decoder"><a class="markdownIt-Anchor" href="#multi-agent-detr-decoder"></a> Multi-Agent DETR Decoder</h3>
 <p>论文的解码流程遵循 QCNet 解码器的设计选择，其中循环、无锚点轨迹提议模块以数据驱动的方式生成自适应轨迹锚点，然后是基于锚点的轨迹细化模块，用于预测轨迹锚点的偏移。然而，QCNet 的原始解码器没有考虑未来时间步长的智能体之间的社交互动，因为它只聚合当前时间步长的相邻智能体的编码。因此，QCNet 解码器仅适用于边缘轨迹预测。为了解决这个问题，论文提**出了一种新的类似 DETR 的解码器，可以捕获未来的社交互动。**论文的解码器的详细架构如图 2 所示。</p>
-<p><img src="/.com//.%5CQCNext-%E4%BD%95%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%BB%A3%EF%BC%9F%5Cimage-20230902190544810.png" alt="image-20230902190544810"></p>
+<p><img src="/.com//image-20230902190544810.png" alt="image-20230902190544810"></p>
 <p>在训练之前，论文用 D(通道数) 的大小随机初始化 K 个嵌入。然后将每个嵌入重复 A 次（应该是指agent的数量）以形成形状为 [K, A, D] 的tensor，其中每一行用作 K 个联合 future 之一的初始种子。</p>
 <ul>
 <li>
@@ -101,7 +130,7 @@ GAT=(\tilde A \odot M)XW
 <li>多智能体输出
 <ul>
 <li>边缘分布的方法：每个智能体类似于单独输出的，关于未来不存在交互</li>
-<li>联合分布的方法：每个智能体在未来是有交互的，不独立。这样可以一定程度上保证一点的安全性，避免不安全的轨迹出现
+<li>联合分布的方法：每个智能体在未来是有交互的，不独立。这样可以一定程度上保证一点的安全性，避免不安全的轨迹出现（这种联合分布预测的发展也是一种趋势）
 <ul>
 <li>除了本文所采用的方法之外（隐式的对安全性进行建模，因为联合分布中包括后面的评分，对轨迹冲突的分数会很低甚至不会出现对应的情况）；</li>
 <li>另一种可以参考UniAD这篇论文，利用了未来估计的occupancy网格来使得驾驶更加安全。</li>
@@ -127,35 +156,6 @@ GAT=(\tilde A \odot M)XW
         <tag>自动驾驶</tag>
         <tag>轨迹预测</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>First-Hello World</title>
-    <url>/2023/06/24/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-<h2 id="quick-start"><a class="markdownIt-Anchor" href="#quick-start"></a> Quick Start</h2>
-<h3 id="create-a-new-post"><a class="markdownIt-Anchor" href="#create-a-new-post"></a> Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="run-server"><a class="markdownIt-Anchor" href="#run-server"></a> Run server</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="generate-static-files"><a class="markdownIt-Anchor" href="#generate-static-files"></a> Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="deploy-to-remote-sites"><a class="markdownIt-Anchor" href="#deploy-to-remote-sites"></a> Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-<h3 id="github同步"><a class="markdownIt-Anchor" href="#github同步"></a> GitHub同步</h3>
-<p>hexo clean</p>
-<p>hexo d -g</p>
-<p>会有一点延迟，更新得等一会</p>
-<h3 id="显示部分内容"><a class="markdownIt-Anchor" href="#显示部分内容"></a> 显示部分内容</h3>
-<p>在你写 md 文章的时候，可以在内容中加上 <code>&lt;!--more--&gt;</code>，这样首页和列表页展示的文章内容就是 <code>&lt;!--more--&gt;</code> 之前的文字，而之后的就不会显示了。</p>
-]]></content>
-      <categories>
-        <category>软件使用</category>
-      </categories>
   </entry>
   <entry>
     <title>pytorch_data&amp;detach</title>
