@@ -26,13 +26,16 @@
 <meta property="og:site_name" content="YNY&#39;s BLOG">
 <meta property="og:description" content="这是一篇关于轨迹预测的文章，文章主要介绍了轨迹预测的论文《QCNeXt: A Next-Generation Framework For Joint Multi-Agent Trajectory Prediction》。文章对论文进行了翻译和分析，并就下一代进行了讨论。笔者论文阅读量不够，遇到错误还麻烦指出，十分感谢！">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/.com//QCNext-%E4%BD%95%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%BB%A3%EF%BC%9F/image-20230902165946533.png">
+<meta property="og:image" content="http://example.com/.com//.%5CQCNext-%E4%BD%95%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%BB%A3%EF%BC%9F%5Cimage-20230902190544810.png">
 <meta property="article:published_time" content="2023-09-02T07:34:21.000Z">
-<meta property="article:modified_time" content="2023-09-02T07:46:01.226Z">
+<meta property="article:modified_time" content="2023-09-02T13:38:05.116Z">
 <meta property="article:author" content="YNY">
 <meta property="article:tag" content="深度学习">
 <meta property="article:tag" content="自动驾驶">
 <meta property="article:tag" content="轨迹预测">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/.com//QCNext-%E4%BD%95%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%BB%A3%EF%BC%9F/image-20230902165946533.png">
 
 
 <link rel="canonical" href="http://example.com/2023/09/02/QCNext-%E4%BD%95%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%BB%A3%EF%BC%9F/">
@@ -142,7 +145,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E5%86%85%E5%AE%B9"><span class="nav-number">1.</span> <span class="nav-text"> 文章内容</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E4%B8%8B%E4%B8%80%E4%BB%A3%E7%9A%84%E8%AE%A8%E8%AE%BA"><span class="nav-number">2.</span> <span class="nav-text"> 关于“下一代的讨论”</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">3.</span> <span class="nav-text"> 参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E5%86%85%E5%AE%B9"><span class="nav-number">1.</span> <span class="nav-text"> 文章内容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#abstract"><span class="nav-number">1.1.</span> <span class="nav-text"> abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.2.</span> <span class="nav-text"> introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#approach"><span class="nav-number">1.3.</span> <span class="nav-text"> approach</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#query-centric-scene-encoder"><span class="nav-number">1.3.1.</span> <span class="nav-text"> Query-Centric Scene Encoder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-agent-detr-decoder"><span class="nav-number">1.3.2.</span> <span class="nav-text"> Multi-Agent DETR Decoder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#scene-scoring-module"><span class="nav-number">1.3.3.</span> <span class="nav-text"> Scene Scoring Module</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E4%B8%8B%E4%B8%80%E4%BB%A3%E7%9A%84%E8%AE%A8%E8%AE%BA"><span class="nav-number">2.</span> <span class="nav-text"> 关于“下一代的讨论”</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">3.</span> <span class="nav-text"> 参考文献</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -233,7 +236,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2023-09-02 15:34:21 / 修改时间：15:46:01" itemprop="dateCreated datePublished" datetime="2023-09-02T15:34:21+08:00">2023-09-02</time>
+      <time title="创建时间：2023-09-02 15:34:21 / 修改时间：21:38:05" itemprop="dateCreated datePublished" datetime="2023-09-02T15:34:21+08:00">2023-09-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -252,14 +255,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>811</span>
+      <span>5.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
+      <span>5 分钟</span>
     </span>
 </div>
 
@@ -272,14 +275,89 @@
     <div class="post-body" itemprop="articleBody"><p>这是一篇关于轨迹预测的文章，文章主要介绍了轨迹预测的论文《QCNeXt: A Next-Generation Framework For Joint Multi-Agent Trajectory Prediction》。文章对论文进行了翻译和分析，并就下一代进行了讨论。笔者论文阅读量不够，遇到错误还麻烦指出，十分感谢！</p>
 <span id="more"></span>
 <h1 id="文章内容"><a class="markdownIt-Anchor" href="#文章内容"></a> 文章内容</h1>
+<p>QCnext是QCnet的扩展。</p>
+<h2 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> abstract</h2>
+<p>估计道路智能体未来轨迹的联合分布对于自动驾驶至关重要。在这份技术报告中，论文提出了一种称为 QCNeXt 的下一代联合多智能体轨迹预测框架。</p>
+<ul>
+<li>首先，论文采用以query为中心的编码范式来完成联合多智能体轨迹预测的任务。在这种编码方案的支持下，论文的场景编码器配备了集合元素上的排列等变性、空间维度上的旋转平移不变性以及时间维度上的平移不变性。这些不变性不仅从根本上实现了准确的多智能体预测，而且还赋予编码器流处理的能力。</li>
+<li>其次，论文提出了一种 DETR -like的多智能体解码器，它通过对未来时间步长的智能体交互建模来促进联合多智能体轨迹预测。</li>
+<li>论文首次证明，即使在边际指标上，联合预测模型也可以优于边际预测模型，这为轨迹预测开辟了新的研究机会。</li>
+<li>论文的方法在 Argoverse 2 多智能体运动预测基准上排名第一，赢得了 CVPR 2023 自动驾驶研讨会上 Argoverse 挑战赛的冠军。</li>
+</ul>
+<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> introduction</h2>
+<p>轨迹预测是自动驾驶中最棘手的问题之一。为了实现安全的自动驾驶，轨迹预测模型必须准确预测自动驾驶车辆周围的一个或多个目标主体（例如车辆、行人、骑自行车的人等）的未来运动。</p>
+<p>在多智能体预测方面，大多数先前的工作主要集中于估计目标智能体未来轨迹的<strong>边际分布</strong>，<mark><strong>即假设多个智能体的未来运动是条件独立的。</strong></mark></p>
+<ul>
+<li>在多智能体预测方面，大多数先前的工作主要集中于估计目标智能体未来轨迹的边际分布，即假设多个智能体的未来运动是条件独立的。</li>
+<li><strong>对于这里我的理解是</strong>：对于多智能体的联合预测没有考虑未来的交互，直接输出每个智能体的结果。就好比对场景和过去的轨迹交互进行编码之后，直接送给解码器进行轨迹的解码，而解码器是没有考虑未来的交互的；这种情况和有一种情况类似：单智能体的预测，这是TNT，mmtransformer的做法，这些方法假设了每个智能体都可以用这种方法进行预测自己未来的轨迹。</li>
+</ul>
+<p>其他一些论文则通过考虑未来的社交互动来关注联合多智能体轨迹预测。然而，这些方法都无法达到与边际指标的边际预测模型相同的性能水平。人们认为联合预测任务比边际预测任务困难得多。</p>
+<p>在这份技术报告中，论文提出了一种用于联合多智能体轨迹预测的下一代建模框架，它可以准确地估计多个目标智能体的联合未来分布。论文将该框架称为 QCNeXt，因为它是 QCNet 的下一代，<strong>QCNet 是世界上最强大的边缘轨迹预测模型之一</strong>。 QCNeXt 采用基于 Transformer 的编码器解码器架构作为其前身。</p>
+<ul>
+<li>对于编码器，论文继承了 HiVT [6] 和 QCNet [5] 的对称设计，使模型具有集合元素上的排列等变性、空间维度上的旋转平移不变性和时间维度上的平移不变性。这些不变性属性有助于模型实现准确的多智能体预测并实现流场景编码。</li>
+<li>对于解码器，论文扩展了 QCNet 的解码流程来联合预测变体，<strong>它可以明确地捕获智能体在未来时间步骤的社交互动。</strong></li>
+<li>此外，论文引入了场景评分模块来估计所有目标智能体联合未来轨迹的可能性。</li>
+<li>再 Argoverse 2 多智能体运动预测基准 [4] 上的实验表明 QCNeXt 可以准确预测场景级别的轨迹。作为联合预测模型，QCNeXt 即使在边际指标上也能优于 QCNet，这展示了论文解决方案的有效性。</li>
+</ul>
+<h2 id="approach"><a class="markdownIt-Anchor" href="#approach"></a> approach</h2>
+<h3 id="query-centric-scene-encoder"><a class="markdownIt-Anchor" href="#query-centric-scene-encoder"></a> Query-Centric Scene Encoder</h3>
+<p>论文的场景编码器与 QCNet [5] 中使用的相同，它是一种基于分解注意力的 Transformer，可以捕获时间依赖性、智能体映射交互和社交交互。编码器的整体架构如图1所示。</p>
+<img src="/.com//QCNext-何为下一代？\image-20230902165946533.png" alt="image-20230902165946533" style="zoom: 80%;">
+<p>论文采用 QCNet 中以查询为中心的范例来对场景元素进行编码。这种编码范式背后的哲学是相对时空，它指导论文为模型配备空间维度的旋转平移不变性和时间维度的平移不变性。在该范式中，为每个场景元素建立局部时空坐标系，包括车道、人行横道、车辆、行人等。然后将这些场景元素编码在其局部坐标系中以产生不变的表示，场景元素之间的关系为Transformers 在相对时空位置嵌入的帮助下捕获。具体来说，在执行 QKV 注意力之前，注意力层中的键/值元素与相对于查询元素的时空位置嵌入相连接。在地图-地图注意力以及一系列时间注意力、智能体-地图注意力和社会注意力之后，场景编码器产生形状 [M, D] 的地图编码和形状 [A, T, D] 的智能体编码，其中 M 、 A 、 T 、 D 分别是地图多边形、建模智能体、历史时间步和隐藏单元的数量。这些编码稍后将用作解码器中的场景上下文。</p>
+<h3 id="multi-agent-detr-decoder"><a class="markdownIt-Anchor" href="#multi-agent-detr-decoder"></a> Multi-Agent DETR Decoder</h3>
+<p>论文的解码流程遵循 QCNet 解码器的设计选择，其中循环、无锚点轨迹提议模块以数据驱动的方式生成自适应轨迹锚点，然后是基于锚点的轨迹细化模块，用于预测轨迹锚点的偏移。然而，QCNet 的原始解码器没有考虑未来时间步长的智能体之间的社交互动，因为它只聚合当前时间步长的相邻智能体的编码。因此，QCNet 解码器仅适用于边缘轨迹预测。为了解决这个问题，论文提**出了一种新的类似 DETR 的解码器，可以捕获未来的社交互动。**论文的解码器的详细架构如图 2 所示。</p>
+<p><img src="/.com//.%5CQCNext-%E4%BD%95%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%BB%A3%EF%BC%9F%5Cimage-20230902190544810.png" alt="image-20230902190544810"></p>
+<p>在训练之前，论文用 D(通道数) 的大小随机初始化 K 个嵌入。然后将每个嵌入重复 A 次（应该是指agent的数量）以形成形状为 [K, A, D] 的tensor，其中每一行用作 K 个联合 future 之一的初始种子。</p>
+<ul>
+<li>
+<p>对于该tensor的每一行，A 嵌入首先使用 Mode2Time 交叉注意模块进行更新，这使得每个嵌入负责场景中一个智能体的预测。</p>
+</li>
+<li>
+<p>然后，Mode2Map 交叉注意模块用相邻地图信息更新嵌入。</p>
+</li>
+<li>
+<p>接下来，论文在嵌入tensor上应用行自注意力，其目的是对每个联合场景智能体之间的社交互动进行建模</p>
+</li>
+</ul>
+<p>这三个模块交错堆叠 Ldec 次，后面是一个列式自注意力模块，使 K 个联合场景能够相互通信。然后使用 MLP （这里其实也有一个假设，就是未来的时间步都是独立的，这样就不用像循环神经网络一样每一个时间步去执行了（当然MLP也可能潜在的学习了轨迹之间的联系））从更新的嵌入tensor中解码 2 秒的轨迹。为了预测接下来 2 秒的轨迹，论文让更新后的嵌入tensor再次成为 Mode2Time 交叉注意力模块的输入（也就是说在循环模块中只有第一次输入时anchor，后面的是更新后的tensor），并重复上述过程。<strong>这个计算过程会循环进行</strong>，直到完成 6 秒的轨迹。</p>
+<p>[K,A,T,4]：k代表每个智能体预测的轨迹数量（多模态输出，单模态输出会导致不因该出现多模态轨迹平均的结果，且不符合实际情况[3]）；A：智能体数量；T未来的时间步；4：每一个时间步输出的结果数量</p>
+<p>proposal模块预测的轨迹充当refinement模块的锚点。与proposal模块相比，refinement模块的初始嵌入张量是不可学习的（这里指的是初始的anchor是随机确定的），而是从proposal模块输出的轨迹中推导出来的(这里的proposal是由anchor更新过来的)。其余的架构proposal模块的架构类似，不同之处在于 MLP 预测器在单个镜头中输出轨迹锚点的偏移量，而不使用任何循环机制。（这一块的内容有点像mmtransformer中的stack transformer）</p>
+<h3 id="scene-scoring-module"><a class="markdownIt-Anchor" href="#scene-scoring-module"></a> Scene Scoring Module</h3>
+<p>与 QCNet 的解码器通过应用于后细化模式嵌入的 MLP 生成智能体级轨迹分数相比，<strong>论文的解码器需要生成场景级置信度分数以适应联合轨迹预测任务</strong>。<mark>场景评分模块将场景中所有目标智能体的后细化模式嵌入作为输入</mark>。为了为每个联合预测生成一个置信度得分，论文需要一些场景级池化算子将所有目标智能体的模式嵌入总结为一个场景嵌入，并通过 MLP 从中解码置信度得分。典型的池化方法包括平均池化、最大池化、注意力池化等。论文凭经验选择注意力池化，因为论文注意到一些目标智能体有不感兴趣的行为（例如，保持静态），不应该对场景分数的计算贡献太大。（一些不该出现，不切实际的场景因该赋予低分）</p>
 <h1 id="关于下一代的讨论"><a class="markdownIt-Anchor" href="#关于下一代的讨论"></a> 关于“下一代的讨论”</h1>
+<p>论文中所提到的“下一代”是指 QCNet 的下一代。</p>
+<p>论文就此更广泛的讨论一下这一点：</p>
 <p>从过去到如今轨迹预测模型经历了三个阶段：基于物理的方法，基于maneuver的方法，基于交互感知的方法。</p>
-<p>其中基于物理的方法根据车辆的运动学和动力学特征预测车辆的未来轨迹。这些方法忽略了其他车辆和基础设施对目标车辆运动的影响，因此它们经常在超过一秒的预测范围内失败。</p>
+<p>其中基于物理的方法根据车辆的运动学和动力学特征预测车辆的未来轨迹。这些方法忽略了其他车辆和基础设施对目标车辆运动的影响，因此它们经常在超过一秒的预测范围内失败。如过去的一些跟车模型IDM模型，GIPPS模型等。</p>
 <p>基于机动的方法根据一组机动原型（maneuver prototype）预测目标车辆的未来运动。这些将道路的结构考虑在内进行长期预测，但仍然忽略了车辆间的交互作用。</p>
 <p>基于交互感知的方法，将驾驶作为一种交互活动，吸引了越来越多的兴趣，与那些非交互感知方法相比表现出更好的性能。他们中的大多数只考虑车辆之间的相互作用而忽略了交通基础设施。</p>
+<p>现在的方法基本都属于交互感知的方法：如TNT，Dense TNT，HOMO，QCNet等方法。</p>
+<p>再交互感知的方法中也出现了一些的分支，我们就输出结果的方式进行探讨：</p>
+<p>就输出结果而言：分为单模态输出，多模态输出。单智能体输出，多智能体输出，并行输出，循环输出</p>
+<ul>
+<li>单模态输出是模型只输出一条轨迹，该方法存在一定的缺陷，在论文[3]中通过实验发现该输出结果会是多模态输出的一种平均形式，会造成与实际不符合的情况</li>
+<li>多模态输出是一种比较火也是比较复合实际的输出方式，这样的输出模拟的人的不确定性驾驶行为，模仿人类的驾驶意图，且效果更好。</li>
+<li>单智能体输出是指模型只输出一个智能体的结果，并且该模型可以在所有智能体上使用，这样可以节省计算成本，降低耗时；也可以看成是每辆车在未来没有交互，和被当成是边缘分布一样。</li>
+<li>多智能体输出
+<ul>
+<li>边缘分布的方法：每个智能体类似于单独输出的，关于未来不存在交互</li>
+<li>联合分布的方法：每个智能体在未来是有交互的，不独立。这样可以一定程度上保证一点的安全性，避免不安全的轨迹出现
+<ul>
+<li>除了本文所采用的方法之外（隐式的对安全性进行建模，因为联合分布中包括后面的评分，对轨迹冲突的分数会很低甚至不会出现对应的情况）；</li>
+<li>另一种可以参考UniAD这篇论文，利用了未来估计的occupancy网格来使得驾驶更加安全。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>并行输出是指像MLP或TNT这样（MLP可能隐含学习了未来时间步之间的一种表示；对于TNT这种可能在对anchor修正的时候也潜在的学习了未来时间步之间的联系）这样直接输出几个时间步内的结果，这存在一个潜在的假设（在给定anchor的情况下（TNT，multipath））未来的时间步是独立的；这样的计算效率更高</li>
+<li>循环输出类似于social-LSTM这样，一个一个时间步的输出，这样的效率比较低，之间学习了未来时间步之间的联系。</li>
+</ul>
 <h1 id="参考文献"><a class="markdownIt-Anchor" href="#参考文献"></a> 参考文献</h1>
 <p>[1]Zhou Z, Wen Z, Wang J, et al. QCNeXt: A Next-Generation Framework For Joint Multi-Agent Trajectory Prediction[J]. arXiv preprint arXiv:2306.10508, 2023.<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2306.10508">https://arxiv.org/abs/2306.10508</a></p>
 <p>[2]Mo X, Xing Y, Lv C. Recog: A deep learning framework with heterogeneous graph for interaction-aware trajectory prediction[J]. arXiv preprint arXiv:2012.05032, 2020.<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2012.05032">https://arxiv.org/abs/2012.05032</a></p>
+<p>[3]Cui H, Radosavljevic V, Chou F C, et al. Multimodal trajectory predictions for autonomous driving using deep convolutional networks[C]//2019 International Conference on Robotics and Automation (ICRA). IEEE, 2019: 2090-2096.<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1809.10732">https://arxiv.org/abs/1809.10732</a></p>
 
     </div>
 
@@ -340,13 +418,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">23k</span>
+    <span title="站点总字数">27k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">21 分钟</span>
+    <span title="站点阅读时长">25 分钟</span>
   </span>
 </div>
 
