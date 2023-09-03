@@ -34,7 +34,7 @@
 <meta property="og:image" content="http://example.com/2023/09/02/QCNext-%E4%BD%95%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%BB%A3%EF%BC%9F/image-20230903164343922.png">
 <meta property="og:image" content="http://example.com/2023/09/02/QCNext-%E4%BD%95%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%BB%A3%EF%BC%9F/image-20230903164708621.png">
 <meta property="article:published_time" content="2023-09-02T07:34:21.000Z">
-<meta property="article:modified_time" content="2023-09-03T08:55:13.273Z">
+<meta property="article:modified_time" content="2023-09-03T12:57:45.750Z">
 <meta property="article:author" content="YNY">
 <meta property="article:tag" content="深度学习">
 <meta property="article:tag" content="自动驾驶">
@@ -247,7 +247,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-09-03 16:55:13" itemprop="dateModified" datetime="2023-09-03T16:55:13+08:00">2023-09-03</time>
+      <time title="修改时间：2023-09-03 20:57:45" itemprop="dateModified" datetime="2023-09-03T20:57:45+08:00">2023-09-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -266,14 +266,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.9k</span>
+      <span>5.4k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
+      <span>5 分钟</span>
     </span>
 </div>
 
@@ -406,6 +406,17 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 <li>并行输出是指像MLP或TNT这样（MLP可能隐含学习了未来时间步之间的一种表示；对于TNT这种可能在对anchor修正的时候也潜在的学习了未来时间步之间的联系）这样直接输出几个时间步内的结果，这存在一个潜在的假设（在给定anchor的情况下（TNT，multipath））未来的时间步是独立的；这样的计算效率更高</li>
 <li>循环输出类似于social-LSTM这样，一个一个时间步的输出，这样的效率比较低，之间学习了未来时间步之间的联系。</li>
 </ul>
+<p>除了对输出结果的讨论，还有对任务的讨论：单任务学习，多任务联合学习</p>
+<ul>
+<li>单任务学习是指模型只服务于一个任务，对本篇文章而言就是轨迹预测，像QCNext，QCNet，TNT，HOME等都是属于单任务的；</li>
+<li>多任务学习是指多个任务共同组成一条end-to-end的pipeline，多个任务的联合学习可以对每个任务都有一定的提升效果。而且也更符合自动驾驶算法的整体运行流程
+<ul>
+<li>早期的有IntentNet，将目标检测与轨迹预测结合起来学习。</li>
+<li>现在随着大模型的发展，基于transformer的的自动驾驶大模型也被提出：UniAD；该算法统一了自动驾驶的感知，跟踪，预测和规划模块。</li>
+</ul>
+</li>
+</ul>
+<p>我认为未来的一个大趋势就是统一的端到端的大模型应用到自动驾驶中去，这也是人工智能：算法，大数据，算力共同推动的结果。</p>
 <h1 id="参考文献"><a class="markdownIt-Anchor" href="#参考文献"></a> 参考文献</h1>
 <p>[1]Zhou Z, Wen Z, Wang J, et al. QCNeXt: A Next-Generation Framework For Joint Multi-Agent Trajectory Prediction[J]. arXiv preprint arXiv:2306.10508, 2023.<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2306.10508">https://arxiv.org/abs/2306.10508</a></p>
 <p>[2]Mo X, Xing Y, Lv C. Recog: A deep learning framework with heterogeneous graph for interaction-aware trajectory prediction[J]. arXiv preprint arXiv:2012.05032, 2020.<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2012.05032">https://arxiv.org/abs/2012.05032</a></p>
@@ -415,6 +426,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 <p>[6] Gao J, Sun C, Zhao H, et al. Vectornet: Encoding hd maps and agent dynamics from vectorized representation[C]//Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2020: 11525-11533.<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2005.04259">https://arxiv.org/abs/2005.04259</a></p>
 <p>[7] Liu Y, Zhang J, Fang L, et al. Multimodal motion prediction with stacked transformers[C]//Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2021: 7577-7586.<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2103.11624">https://arxiv.org/abs/2103.11624</a></p>
 <p>[8] Hu Y, Yang J, Chen L, et al. Goal-oriented Autonomous Driving[J]. arXiv preprint arXiv:2212.10156, 2022.<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2212.10156">https://arxiv.org/abs/2212.10156</a></p>
+<p>[9]Casas S, Luo W, Urtasun R. Intentnet: Learning to predict intention from raw sensor data[C]//Conference on Robot Learning. PMLR, 2018: 947-956.<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2101.07907">https://arxiv.org/abs/2101.07907</a></p>
 
     </div>
 
@@ -478,7 +490,7 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">27k</span>
+    <span title="站点总字数">28k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
