@@ -39,11 +39,11 @@
       
         <tags>
             
-            <tag> 深度学习 </tag>
-            
             <tag> 自动驾驶 </tag>
             
             <tag> 轨迹预测 </tag>
+            
+            <tag> 深度学习 </tag>
             
         </tags>
       
@@ -149,9 +149,9 @@
       
         <tags>
             
-            <tag> GNN </tag>
-            
             <tag> 深度学习 </tag>
+            
+            <tag> GNN </tag>
             
         </tags>
       
