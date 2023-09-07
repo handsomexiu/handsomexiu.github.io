@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"handsomexiu.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null,"show_result":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"giscus","storage":true,"lazyload":false,"nav":null,"activeClass":"giscus"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本篇文章是关于VGAE的介绍，VGAE是变分自编码器再图神经网络上的应用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VGAE">
+<meta property="og:url" content="https://handsomexiu.github.io/2023/09/07/VGAE/index.html">
+<meta property="og:site_name" content="YNY&#39;s BLOG">
+<meta property="og:description" content="本篇文章是关于VGAE的介绍，VGAE是变分自编码器再图神经网络上的应用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-07T07:27:46.000Z">
+<meta property="article:modified_time" content="2023-09-07T07:35:41.231Z">
+<meta property="article:author" content="YNY">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="GNN">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://handsomexiu.github.io/2023/09/07/VGAE/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://handsomexiu.github.io/2023/09/07/VGAE/","path":"2023/09/07/VGAE/","title":"VGAE"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>VGAE | YNY's BLOG</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">YNY's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">YOLO</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="YNY"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">YNY</p>
+  <div class="site-description" itemprop="description">他强任他强，清风拂山岗</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/handsomexiu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;handsomexiu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1184817330@qq.com" title="E-Mail → mailto:1184817330@qq.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://handsomexiu.github.io/2023/09/07/VGAE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="YNY">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YNY's BLOG">
+      <meta itemprop="description" content="他强任他强，清风拂山岗">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="VGAE | YNY's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          VGAE
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-09-07 15:27:46 / 修改时间：15:35:41" itemprop="dateCreated datePublished" datetime="2023-09-07T15:27:46+08:00">2023-09-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/GNN/" itemprop="url" rel="index"><span itemprop="name">GNN</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本篇文章是关于VGAE的介绍，VGAE是变分自编码器再图神经网络上的应用</p>
+<span id="more"></span>
+<ul>
+<li>图变分自编码器</li>
+<li>就是将变分自编码器用到了图上</li>
+<li>是一种无监督学习</li>
+<li>目的是重构误差最小</li>
+<li>损失函数的设计和VAE的一致，考虑的是极大似然估计</li>
+</ul>
+<p>论文考虑的是无向无权重图，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">G</mi><mo>=</mo><mrow><mi mathvariant="script">V</mi><mo separator="true">,</mo><mi mathvariant="script">E</mi></mrow></mrow><annotation encoding="application/x-tex">\mathcal{G}={\mathcal{V},\mathcal{E}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.78055em;vertical-align:-0.09722em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.0593em;">G</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord"><span class="mord mathcal" style="margin-right:0.08222em;">V</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.08944em;">E</span></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mi mathvariant="script">V</mi></mrow><annotation encoding="application/x-tex">N=\mathcal{V}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.08222em;">V</span></span></span></span></span>表示节点数量。这里的邻接矩阵A有点不一样的是，这里考虑到了自连接也就是A的对角线不为1，为0。（<code>这里为什么要考虑自连接了</code>）</p>
+<p>对于VAE中采用的是神经网络来拟合隐变量的方差和均值——这里隐变量的数量和样本（节点）数量是一致的。<br>
+对于VGAE而言论文利用了两层图卷积网络来拟合均值和方差。</p>
+<p>推断模型</p>
+<ul>
+<li>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow></mrow><annotation encoding="application/x-tex"></annotation></semantics></math></span><span class="katex-html" aria-hidden="true"></span></span></span></p>
+</li>
+</ul>
+<p class="katex-block katex-error" title="ParseError: KaTeX parse error: Can&#039;t use function &#039;$&#039; in math mode at position 6: 
+- 其中$̲\mu=GCN_{\mu}(X…">
+- 其中$\mu=GCN_{\mu}(X,A)$表示均值向量$\mu$的矩阵。同理论文对方差的拟合用的是$\log \sigma=GCN_{\sigma}(X,A)$
+
+
+
+其中GCN(X,A)的公式如下：
+</p>
+<p>GCN(X,A)=\hat ARELU(\hat AXW_0)W_1</p>
+<p class="katex-block katex-error" title="ParseError: KaTeX parse error: Can&#039;t use function &#039;$&#039; in math mode at position 8: 
+- 其中对于$̲\hat A=D^{-\fra…">
+- 其中对于$\hat A=D^{-\frac{1}{2}}AD^{-\frac{1}{2}}$对称归一化邻接矩阵。
+
+生成模型：是由潜在变量的内积给出来的
+
+- </p>
+<p>P(A|Z)=\prod_{i=1}<sup>N\prod_{j=1}</sup>{N}P(A_{ij}|z_i,z_j),with<br>
+\ \ \ P(A_{ij}|z_i,z_j)=\sigma(z_i^Tz_j)</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>学习目标</mtext><mo>−</mo></mrow><annotation encoding="application/x-tex">
+
+
+学习目标
+- </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord cjk_fallback">学</span><span class="mord cjk_fallback">习</span><span class="mord cjk_fallback">目</span><span class="mord cjk_fallback">标</span><span class="mord">−</span></span></span></span></span></p>
+<p>\mathcal{L}=\mathbb{E}_{q(Z|X,A)}[\log p(A|Z)]-KL[q(Z|X,A)||p(Z)]</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>N</mi><mi>o</mi><mi>n</mi><mo>−</mo><mi>p</mi><mi>r</mi><mi>o</mi><mi>b</mi><mi>a</mi><mi>b</mi><mi>i</mi><mi>l</mi><mi>i</mi><mi>s</mi><mi>t</mi><mi>i</mi><mi>c</mi><mi>g</mi><mi>r</mi><mi>a</mi><mi>p</mi><mi>h</mi><mi>a</mi><mi>u</mi><mi>t</mi><mi>o</mi><mo>−</mo><mi>e</mi><mi>n</mi><mi>c</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>r</mi><mo stretchy="false">(</mo><mi>G</mi><mi>A</mi><mi>E</mi><mo stretchy="false">)</mo><mi>m</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi><mo stretchy="false">(</mo><mtext>这里因该是一般的</mtext><mi>G</mi><mi>A</mi><mi>E</mi><mtext>的形式</mtext><mo stretchy="false">)</mo><mo>−</mo></mrow><annotation encoding="application/x-tex">
+Non-probabilistic graph auto-encoder (GAE) model(这里因该是一般的GAE的形式)
+
+- </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">p</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">o</span><span class="mord mathnormal">b</span><span class="mord mathnormal">a</span><span class="mord mathnormal">b</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">i</span><span class="mord mathnormal">s</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">c</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal">p</span><span class="mord mathnormal">h</span><span class="mord mathnormal">a</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">e</span><span class="mord mathnormal">n</span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal">d</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mopen">(</span><span class="mord mathnormal">G</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mclose">)</span><span class="mord mathnormal">m</span><span class="mord mathnormal">o</span><span class="mord mathnormal">d</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mopen">(</span><span class="mord cjk_fallback">这</span><span class="mord cjk_fallback">里</span><span class="mord cjk_fallback">因</span><span class="mord cjk_fallback">该</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">一</span><span class="mord cjk_fallback">般</span><span class="mord cjk_fallback">的</span><span class="mord mathnormal">G</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">形</span><span class="mord cjk_fallback">式</span><span class="mclose">)</span><span class="mord">−</span></span></span></span></span></p>
+<p>\hat A=\sigma(ZZ^{T}),with\ \ \ Z=GCN(X,A)</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo stretchy="false">[</mo><mtext>一文理解变分自编码器（</mtext><mi>V</mi><mi>A</mi><mi>E</mi><mtext>）</mtext><mo stretchy="false">]</mo><mo stretchy="false">(</mo><mi>h</mi><mi>t</mi><mi>t</mi><mi>p</mi><mi>s</mi><mo>:</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">/</mi><mi>z</mi><mi>h</mi><mi>u</mi><mi>a</mi><mi>n</mi><mi>l</mi><mi>a</mi><mi>n</mi><mi mathvariant="normal">.</mi><mi>z</mi><mi>h</mi><mi>i</mi><mi>h</mi><mi>u</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>o</mi><mi>m</mi><mi mathvariant="normal">/</mi><mi>p</mi><mi mathvariant="normal">/</mi><mn>64485020</mn><mo stretchy="false">)</mo><mo stretchy="false">[</mo><mi>V</mi><mi>G</mi><mi>A</mi><mi>E</mi><mtext>（</mtext><mi>V</mi><mi>a</mi><mi>r</mi><mi>i</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>a</mi><mi>l</mi><mi>g</mi><mi>r</mi><mi>a</mi><mi>p</mi><mi>h</mi><mi>a</mi><mi>u</mi><mi>t</mi><mi>o</mi><mo>−</mo><mi>e</mi><mi>n</mi><mi>c</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>r</mi><mi>s</mi><mtext>）论文详解</mtext><mo stretchy="false">]</mo><mo stretchy="false">(</mo><mi>h</mi><mi>t</mi><mi>t</mi><mi>p</mi><mi>s</mi><mo>:</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">/</mi><mi>z</mi><mi>h</mi><mi>u</mi><mi>a</mi><mi>n</mi><mi>l</mi><mi>a</mi><mi>n</mi><mi mathvariant="normal">.</mi><mi>z</mi><mi>h</mi><mi>i</mi><mi>h</mi><mi>u</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>o</mi><mi>m</mi><mi mathvariant="normal">/</mi><mi>p</mi><mi mathvariant="normal">/</mi><mn>78340397</mn><mo stretchy="false">)</mo><mo stretchy="false">[</mo><mtext>深度学习中常见的互信息的变分上下界</mtext><mo stretchy="false">(</mo><mtext>详细推导</mtext><mo stretchy="false">)</mo><mo stretchy="false">]</mo><mo stretchy="false">(</mo><mi>h</mi><mi>t</mi><mi>t</mi><mi>p</mi><mi>s</mi><mo>:</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">/</mi><mi>z</mi><mi>h</mi><mi>u</mi><mi>a</mi><mi>n</mi><mi>l</mi><mi>a</mi><mi>n</mi><mi mathvariant="normal">.</mi><mi>z</mi><mi>h</mi><mi>i</mi><mi>h</mi><mi>u</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>o</mi><mi>m</mi><mi mathvariant="normal">/</mi><mi>p</mi><mi mathvariant="normal">/</mi><mn>91900950</mn><mo stretchy="false">)</mo><mo stretchy="false">[</mo><mtext>【</mtext><mi>G</mi><mi>N</mi><mi>N</mi><mtext>五大类</mtext><mi>V</mi><mi>G</mi><mi>A</mi><mi>E</mi><mtext>】（变分图自编码器）：</mtext><mi>V</mi><mi>a</mi><mi>r</mi><mi>i</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>a</mi><mi>l</mi><mi>G</mi><mi>r</mi><mi>a</mi><mi>p</mi><mi>h</mi><mi>A</mi><mi>u</mi><mi>t</mi><mi>o</mi><mo>−</mo><mi>E</mi><mi>n</mi><mi>c</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>r</mi><mi>s</mi><mo stretchy="false">]</mo><mo stretchy="false">(</mo><mi>h</mi><mi>t</mi><mi>t</mi><mi>p</mi><mi>s</mi><mo>:</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">/</mi><mi>b</mi><mi>l</mi><mi>o</mi><mi>g</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>s</mi><mi>d</mi><mi>n</mi><mi mathvariant="normal">.</mi><mi>n</mi><mi>e</mi><mi>t</mi><mi mathvariant="normal">/</mi><mi>l</mi><mi>j</mi><mn>2048</mn><mi mathvariant="normal">/</mi><mi>a</mi><mi>r</mi><mi>t</mi><mi>i</mi><mi>c</mi><mi>l</mi><mi>e</mi><mi mathvariant="normal">/</mi><mi>d</mi><mi>e</mi><mi>t</mi><mi>a</mi><mi>i</mi><mi>l</mi><mi>s</mi><mi mathvariant="normal">/</mi><mn>105846421</mn><mo stretchy="false">)</mo><mo stretchy="false">[</mo><mtext>第六周</mtext><mi mathvariant="normal">.</mi><mn>02.</mn><mi>V</mi><mi>G</mi><mi>A</mi><mi>E</mi><mtext>带读</mtext><mo>+</mo><mtext>代码实操</mtext><mo stretchy="false">]</mo><mo stretchy="false">(</mo><mi>h</mi><mi>t</mi><mi>t</mi><mi>p</mi><mi>s</mi><mo>:</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">/</mi><mi>b</mi><mi>l</mi><mi>o</mi><mi>g</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>s</mi><mi>d</mi><mi>n</mi><mi mathvariant="normal">.</mi><mi>n</mi><mi>e</mi><mi>t</mi><mi mathvariant="normal">/</mi><mi>o</mi><mi>l</mi><mi>d</mi><mi>m</mi><mi>a</mi><msub><mi>o</mi><mn>2</mn></msub><mn>001</mn><mi mathvariant="normal">/</mi><mi>a</mi><mi>r</mi><mi>t</mi><mi>i</mi><mi>c</mi><mi>l</mi><mi>e</mi><mi mathvariant="normal">/</mi><mi>d</mi><mi>e</mi><mi>t</mi><mi>a</mi><mi>i</mi><mi>l</mi><mi>s</mi><mi mathvariant="normal">/</mi><mn>118729806</mn><mo stretchy="false">)</mo><mo stretchy="false">[</mo><mi>C</mi><mi>S</mi><mn>224</mn><mi>W</mi><mtext>摘要</mtext><mn>09.</mn><mi>T</mi><mi>h</mi><mi>e</mi><mi>o</mi><mi>r</mi><mi>y</mi><mi>o</mi><mi>f</mi><mi>G</mi><mi>r</mi><mi>a</mi><mi>p</mi><mi>h</mi><mi>N</mi><mi>e</mi><mi>u</mi><mi>r</mi><mi>a</mi><mi>l</mi><mi>N</mi><mi>e</mi><mi>t</mi><mi>w</mi><mi>o</mi><mi>r</mi><mi>k</mi><mi>s</mi><mo stretchy="false">]</mo><mo stretchy="false">(</mo><mi>h</mi><mi>t</mi><mi>t</mi><mi>p</mi><mi>s</mi><mo>:</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">/</mi><mi>b</mi><mi>l</mi><mi>o</mi><mi>g</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>s</mi><mi>d</mi><mi>n</mi><mi mathvariant="normal">.</mi><mi>n</mi><mi>e</mi><mi>t</mi><mi mathvariant="normal">/</mi><mi>o</mi><mi>l</mi><mi>d</mi><mi>m</mi><mi>a</mi><msub><mi>o</mi><mn>2</mn></msub><mn>001</mn><mi mathvariant="normal">/</mi><mi>a</mi><mi>r</mi><mi>t</mi><mi>i</mi><mi>c</mi><mi>l</mi><mi>e</mi><mi mathvariant="normal">/</mi><mi>d</mi><mi>e</mi><mi>t</mi><mi>a</mi><mi>i</mi><mi>l</mi><mi>s</mi><mi mathvariant="normal">/</mi><mn>120468742</mn><mo stretchy="false">)</mo><mo stretchy="false">[</mo><mtext>机器学习方法—优雅的模型（一）：变分自编码器（</mtext><mi>V</mi><mi>A</mi><mi>E</mi><mtext>）</mtext><mo stretchy="false">]</mo><mo stretchy="false">(</mo><mi>h</mi><mi>t</mi><mi>t</mi><mi>p</mi><mi>s</mi><mo>:</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">/</mi><mi>z</mi><mi>h</mi><mi>u</mi><mi>a</mi><mi>n</mi><mi>l</mi><mi>a</mi><mi>n</mi><mi mathvariant="normal">.</mi><mi>z</mi><mi>h</mi><mi>i</mi><mi>h</mi><mi>u</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>o</mi><mi>m</mi><mi mathvariant="normal">/</mi><mi>p</mi><mi mathvariant="normal">/</mi><mn>348498294</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">
+[ 一文理解变分自编码器（VAE）](https://zhuanlan.zhihu.com/p/64485020)
+
+[VGAE（Variational graph auto-encoders）论文详解](https://zhuanlan.zhihu.com/p/78340397)
+
+[深度学习中常见的互信息的变分上下界(详细推导)](https://zhuanlan.zhihu.com/p/91900950)
+
+[【GNN五大类 VGAE】（变分图自编码器）：Variational Graph Auto-Encoders](https://blog.csdn.net/lj2048/article/details/105846421)
+[第六周.02.VGAE带读+代码实操](https://blog.csdn.net/oldmao_2001/article/details/118729806)
+
+[CS224W摘要09.Theory of Graph Neural Networks](https://blog.csdn.net/oldmao_2001/article/details/120468742)
+
+
+
+[机器学习方法—优雅的模型（一）：变分自编码器（VAE）](https://zhuanlan.zhihu.com/p/348498294)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord cjk_fallback">一</span><span class="mord cjk_fallback">文</span><span class="mord cjk_fallback">理</span><span class="mord cjk_fallback">解</span><span class="mord cjk_fallback">变</span><span class="mord cjk_fallback">分</span><span class="mord cjk_fallback">自</span><span class="mord cjk_fallback">编</span><span class="mord cjk_fallback">码</span><span class="mord cjk_fallback">器</span><span class="mord cjk_fallback">（</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mord cjk_fallback">）</span><span class="mclose">]</span><span class="mopen">(</span><span class="mord mathnormal">h</span><span class="mord mathnormal">t</span><span class="mord mathnormal">t</span><span class="mord mathnormal">p</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">/</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord mathnormal">h</span><span class="mord mathnormal">u</span><span class="mord mathnormal">a</span><span class="mord mathnormal">n</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">a</span><span class="mord mathnormal">n</span><span class="mord">.</span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord mathnormal">h</span><span class="mord mathnormal">i</span><span class="mord mathnormal">h</span><span class="mord mathnormal">u</span><span class="mord">.</span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal">m</span><span class="mord">/</span><span class="mord mathnormal">p</span><span class="mord">/</span><span class="mord">6</span><span class="mord">4</span><span class="mord">4</span><span class="mord">8</span><span class="mord">5</span><span class="mord">0</span><span class="mord">2</span><span class="mord">0</span><span class="mclose">)</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mord mathnormal">G</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mord cjk_fallback">（</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">i</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal">p</span><span class="mord mathnormal">h</span><span class="mord mathnormal">a</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">e</span><span class="mord mathnormal">n</span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal">d</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">s</span><span class="mord cjk_fallback">）</span><span class="mord cjk_fallback">论</span><span class="mord cjk_fallback">文</span><span class="mord cjk_fallback">详</span><span class="mord cjk_fallback">解</span><span class="mclose">]</span><span class="mopen">(</span><span class="mord mathnormal">h</span><span class="mord mathnormal">t</span><span class="mord mathnormal">t</span><span class="mord mathnormal">p</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">/</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord mathnormal">h</span><span class="mord mathnormal">u</span><span class="mord mathnormal">a</span><span class="mord mathnormal">n</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">a</span><span class="mord mathnormal">n</span><span class="mord">.</span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord mathnormal">h</span><span class="mord mathnormal">i</span><span class="mord mathnormal">h</span><span class="mord mathnormal">u</span><span class="mord">.</span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal">m</span><span class="mord">/</span><span class="mord mathnormal">p</span><span class="mord">/</span><span class="mord">7</span><span class="mord">8</span><span class="mord">3</span><span class="mord">4</span><span class="mord">0</span><span class="mord">3</span><span class="mord">9</span><span class="mord">7</span><span class="mclose">)</span><span class="mopen">[</span><span class="mord cjk_fallback">深</span><span class="mord cjk_fallback">度</span><span class="mord cjk_fallback">学</span><span class="mord cjk_fallback">习</span><span class="mord cjk_fallback">中</span><span class="mord cjk_fallback">常</span><span class="mord cjk_fallback">见</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">互</span><span class="mord cjk_fallback">信</span><span class="mord cjk_fallback">息</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">变</span><span class="mord cjk_fallback">分</span><span class="mord cjk_fallback">上</span><span class="mord cjk_fallback">下</span><span class="mord cjk_fallback">界</span><span class="mopen">(</span><span class="mord cjk_fallback">详</span><span class="mord cjk_fallback">细</span><span class="mord cjk_fallback">推</span><span class="mord cjk_fallback">导</span><span class="mclose">)</span><span class="mclose">]</span><span class="mopen">(</span><span class="mord mathnormal">h</span><span class="mord mathnormal">t</span><span class="mord mathnormal">t</span><span class="mord mathnormal">p</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">/</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord mathnormal">h</span><span class="mord mathnormal">u</span><span class="mord mathnormal">a</span><span class="mord mathnormal">n</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">a</span><span class="mord mathnormal">n</span><span class="mord">.</span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord mathnormal">h</span><span class="mord mathnormal">i</span><span class="mord mathnormal">h</span><span class="mord mathnormal">u</span><span class="mord">.</span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal">m</span><span class="mord">/</span><span class="mord mathnormal">p</span><span class="mord">/</span><span class="mord">9</span><span class="mord">1</span><span class="mord">9</span><span class="mord">0</span><span class="mord">0</span><span class="mord">9</span><span class="mord">5</span><span class="mord">0</span><span class="mclose">)</span><span class="mopen">[</span><span class="mord cjk_fallback">【</span><span class="mord mathnormal">G</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mord cjk_fallback">五</span><span class="mord cjk_fallback">大</span><span class="mord cjk_fallback">类</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mord mathnormal">G</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mord cjk_fallback">】</span><span class="mord cjk_fallback">（</span><span class="mord cjk_fallback">变</span><span class="mord cjk_fallback">分</span><span class="mord cjk_fallback">图</span><span class="mord cjk_fallback">自</span><span class="mord cjk_fallback">编</span><span class="mord cjk_fallback">码</span><span class="mord cjk_fallback">器</span><span class="mord cjk_fallback">）</span><span class="mord cjk_fallback">：</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">i</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">G</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal">p</span><span class="mord mathnormal">h</span><span class="mord mathnormal">A</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mord mathnormal">n</span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal">d</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">s</span><span class="mclose">]</span><span class="mopen">(</span><span class="mord mathnormal">h</span><span class="mord mathnormal">t</span><span class="mord mathnormal">t</span><span class="mord mathnormal">p</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">/</span><span class="mord">/</span><span class="mord mathnormal">b</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord">.</span><span class="mord mathnormal">c</span><span class="mord mathnormal">s</span><span class="mord mathnormal">d</span><span class="mord mathnormal">n</span><span class="mord">.</span><span class="mord mathnormal">n</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mord">2</span><span class="mord">0</span><span class="mord">4</span><span class="mord">8</span><span class="mord">/</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">c</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">e</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">s</span><span class="mord">/</span><span class="mord">1</span><span class="mord">0</span><span class="mord">5</span><span class="mord">8</span><span class="mord">4</span><span class="mord">6</span><span class="mord">4</span><span class="mord">2</span><span class="mord">1</span><span class="mclose">)</span><span class="mopen">[</span><span class="mord cjk_fallback">第</span><span class="mord cjk_fallback">六</span><span class="mord cjk_fallback">周</span><span class="mord">.</span><span class="mord">0</span><span class="mord">2</span><span class="mord">.</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mord mathnormal">G</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mord cjk_fallback">带</span><span class="mord cjk_fallback">读</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord cjk_fallback">代</span><span class="mord cjk_fallback">码</span><span class="mord cjk_fallback">实</span><span class="mord cjk_fallback">操</span><span class="mclose">]</span><span class="mopen">(</span><span class="mord mathnormal">h</span><span class="mord mathnormal">t</span><span class="mord mathnormal">t</span><span class="mord mathnormal">p</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">/</span><span class="mord">/</span><span class="mord mathnormal">b</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord">.</span><span class="mord mathnormal">c</span><span class="mord mathnormal">s</span><span class="mord mathnormal">d</span><span class="mord mathnormal">n</span><span class="mord">.</span><span class="mord mathnormal">n</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mord">/</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">d</span><span class="mord mathnormal">m</span><span class="mord mathnormal">a</span><span class="mord"><span class="mord mathnormal">o</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">0</span><span class="mord">0</span><span class="mord">1</span><span class="mord">/</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">c</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">e</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">s</span><span class="mord">/</span><span class="mord">1</span><span class="mord">1</span><span class="mord">8</span><span class="mord">7</span><span class="mord">2</span><span class="mord">9</span><span class="mord">8</span><span class="mord">0</span><span class="mord">6</span><span class="mclose">)</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord">2</span><span class="mord">2</span><span class="mord">4</span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="mord cjk_fallback">摘</span><span class="mord cjk_fallback">要</span><span class="mord">0</span><span class="mord">9</span><span class="mord">.</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal">h</span><span class="mord mathnormal">e</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord mathnormal">G</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal">p</span><span class="mord mathnormal">h</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mord mathnormal">e</span><span class="mord mathnormal">u</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mord mathnormal">s</span><span class="mclose">]</span><span class="mopen">(</span><span class="mord mathnormal">h</span><span class="mord mathnormal">t</span><span class="mord mathnormal">t</span><span class="mord mathnormal">p</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">/</span><span class="mord">/</span><span class="mord mathnormal">b</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord">.</span><span class="mord mathnormal">c</span><span class="mord mathnormal">s</span><span class="mord mathnormal">d</span><span class="mord mathnormal">n</span><span class="mord">.</span><span class="mord mathnormal">n</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mord">/</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">d</span><span class="mord mathnormal">m</span><span class="mord mathnormal">a</span><span class="mord"><span class="mord mathnormal">o</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">0</span><span class="mord">0</span><span class="mord">1</span><span class="mord">/</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">c</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">e</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">s</span><span class="mord">/</span><span class="mord">1</span><span class="mord">2</span><span class="mord">0</span><span class="mord">4</span><span class="mord">6</span><span class="mord">8</span><span class="mord">7</span><span class="mord">4</span><span class="mord">2</span><span class="mclose">)</span><span class="mopen">[</span><span class="mord cjk_fallback">机</span><span class="mord cjk_fallback">器</span><span class="mord cjk_fallback">学</span><span class="mord cjk_fallback">习</span><span class="mord cjk_fallback">方</span><span class="mord cjk_fallback">法</span><span class="mord">—</span><span class="mord cjk_fallback">优</span><span class="mord cjk_fallback">雅</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">模</span><span class="mord cjk_fallback">型</span><span class="mord cjk_fallback">（</span><span class="mord cjk_fallback">一</span><span class="mord cjk_fallback">）</span><span class="mord cjk_fallback">：</span><span class="mord cjk_fallback">变</span><span class="mord cjk_fallback">分</span><span class="mord cjk_fallback">自</span><span class="mord cjk_fallback">编</span><span class="mord cjk_fallback">码</span><span class="mord cjk_fallback">器</span><span class="mord cjk_fallback">（</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mord cjk_fallback">）</span><span class="mclose">]</span><span class="mopen">(</span><span class="mord mathnormal">h</span><span class="mord mathnormal">t</span><span class="mord mathnormal">t</span><span class="mord mathnormal">p</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">/</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord mathnormal">h</span><span class="mord mathnormal">u</span><span class="mord mathnormal">a</span><span class="mord mathnormal">n</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">a</span><span class="mord mathnormal">n</span><span class="mord">.</span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord mathnormal">h</span><span class="mord mathnormal">i</span><span class="mord mathnormal">h</span><span class="mord mathnormal">u</span><span class="mord">.</span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal">m</span><span class="mord">/</span><span class="mord mathnormal">p</span><span class="mord">/</span><span class="mord">3</span><span class="mord">4</span><span class="mord">8</span><span class="mord">4</span><span class="mord">9</span><span class="mord">8</span><span class="mord">2</span><span class="mord">9</span><span class="mord">4</span><span class="mclose">)</span></span></span></span></span></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/GNN/" rel="tag"># GNN</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/09/03/%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87/" rel="prev" title="插入图片">
+                  <i class="fa fa-chevron-left"></i> 插入图片
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">YNY</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">31k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">28 分钟</span>
+  </span>
+</div>
+
+
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.css" integrity="sha256-hLTCMFlKxdNgPXyWlSSxYN0ykJmxxq9Yt3MNfdRGWeA=" crossorigin="anonymous">
+
+
+
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #4D4D4C;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #F7F7F7;
+      background-image: linear-gradient(#F7F7F7, #F7F7F7);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"handsomexiu/comments","repo_id":"R_kgDOJzfTTQ","category":"Announcements","category_id":"DIC_kwDOJzfTTc4CXcBf","mapping":"pathname","data_strict":0,"reactions_enabled":1,"emit_metadata":0,"theme":"light","lang":"zh-CN","crossorigin":"anonymous","input_position":"bottom"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
+
+</body>
+</html>
