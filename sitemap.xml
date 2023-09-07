@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://handsomexiu.github.io/2023/09/07/GAT/</loc>
+    
+    <lastmod>2023-09-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://handsomexiu.github.io/2023/09/07/VGAE/</loc>
     
     <lastmod>2023-09-07</lastmod>
@@ -110,14 +119,7 @@
 
   
   <url>
-    <loc>https://handsomexiu.github.io/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</loc>
-    <lastmod>2023-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://handsomexiu.github.io/tags/%E8%BD%A8%E8%BF%B9%E9%A2%84%E6%B5%8B/</loc>
+    <loc>https://handsomexiu.github.io/tags/GNN/</loc>
     <lastmod>2023-09-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -131,7 +133,14 @@
   </url>
   
   <url>
-    <loc>https://handsomexiu.github.io/tags/GNN/</loc>
+    <loc>https://handsomexiu.github.io/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</loc>
+    <lastmod>2023-09-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://handsomexiu.github.io/tags/%E8%BD%A8%E8%BF%B9%E9%A2%84%E6%B5%8B/</loc>
     <lastmod>2023-09-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -161,13 +170,6 @@
 
   
   <url>
-    <loc>https://handsomexiu.github.io/categories/%E8%BD%A8%E8%BF%B9%E9%A2%84%E6%B5%8B/</loc>
-    <lastmod>2023-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://handsomexiu.github.io/categories/GNN/</loc>
     <lastmod>2023-09-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -175,7 +177,7 @@
   </url>
   
   <url>
-    <loc>https://handsomexiu.github.io/categories/%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8/</loc>
+    <loc>https://handsomexiu.github.io/categories/%E8%BD%A8%E8%BF%B9%E9%A2%84%E6%B5%8B/</loc>
     <lastmod>2023-09-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -183,6 +185,13 @@
   
   <url>
     <loc>https://handsomexiu.github.io/categories/pytorch/</loc>
+    <lastmod>2023-09-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://handsomexiu.github.io/categories/%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8/</loc>
     <lastmod>2023-09-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
