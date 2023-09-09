@@ -105,7 +105,7 @@
     <url>/2023/09/02/QCNext-%E4%BD%95%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%BB%A3%EF%BC%9F/</url>
     <content><![CDATA[<p>QCNxet的论文《QCNeXt: A Next-Generation Framework For Joint Multi-Agent Trajectory Prediction》。文章主要是对“下一代”进行讨论.</p>
 <span id="more"></span>
-<h1 id="下一代"><a class="markdownIt-Anchor" href="#下一代"></a> “下一代”</h1>
+<h1 id="论文原文解读"><a class="markdownIt-Anchor" href="#论文原文解读"></a> “论文原文解读”</h1>
 <p>论文中所提到的“下一代”是指 QCNet 的下一代。（其实就是在QCNet上的解释）</p>
 <p>论文中提到了两个词语：“marginal distribution”和“joint distribution”，我们结合轨迹预测这个问题域进行解释：我们首先假设有<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span>个智能体，未来的时间步为<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span>。</p>
 <ul>
@@ -129,6 +129,16 @@ X_1\sim P(X_1),X_2\sim P(X_2),\dots,X_N\sim P(X_N)\\
 <p>下面是QCNet：</p>
 <p><img src="image-20230903153240693.png" alt="image-20230903153240693"></p>
 <p>通过对比QCNext最大的改进是增加了一个增加了一个在未来时间上的交互，这种直观上的感觉是正确的，既然我们在进行编码的时候就显示的考虑智能体之间的交互，那么我们在对未来预测的时候也因该考虑智能体之间的交互。</p>
+<h2 id="实验结果"><a class="markdownIt-Anchor" href="#实验结果"></a> 实验结果</h2>
+<p>通过上述操作模型在过去的方法上提升了预测的效果：</p>
+<p><img src="image-20230909162809478.png" alt="image-20230909162809478"></p>
+<p><img src="image-20230909162818737.png" alt="image-20230909162818737"></p>
+<p>在实验过程中论文在原有的单一模型的基础上加入了集成的方法：</p>
+<ul>
+<li>论文使用不同的随机种子来训练 8 个模型，总共产生 48 个场景级预测。对于每个场景，48 个场景级预测用于基于加权 k 均值算法的集成。具体来说，场景中所有目标agent的联合端点作为加权k-means算法的输入，场景级分数作为样本权重。聚类分配后，对每个聚类内的联合轨迹进行平均。这可以被视为边际轨迹预测常用集成策略的简单扩展。</li>
+</ul>
+<p>QCNeXt 在 Argoverse 2 多智能体运动预测基准上的性能如表 1 所示可以看到集成策略可以显着提高模型的性能。但即使不使用集成，论文的方法在所有指标上都已经明显优于所有方法，这证明了论文的建模框架的优越性。</p>
+<p>论文发现 Argoverse 2 验证/测试集中大约 20% 的场景仅评估一个智能体的预测结果。在这种情况下，联合轨迹分布和边缘轨迹分布的公式变得等效，因此论文很好奇联合预测模型和边缘预测模型在这些场景下的性能比较。此前，文献认为联合预测模型在边际指标上无法达到与边际预测模型相同的性能水平，因为联合预测任务必须考虑代理未来轨迹的一致性，因此是一项更具挑战性的任务。然而，论文惊讶地发现这个结论并不适合论文的方法。如表所示。如表 2 所示，在 minFDE6 和 MR6 等边际指标上，QCNeXt 的性能优于 Argoverse 2 上最强大的边际预测模型 QCNet 。更进一步说明了联合预测的有效性。</p>
 <h1 id="关于下一代的讨论"><a class="markdownIt-Anchor" href="#关于下一代的讨论"></a> 关于“下一代的讨论”</h1>
 <p>我们更宽泛的对“下一代”进行讨论，从轨迹预测模型的历史来看这一代代的模型是如何发展的。</p>
 <p>从过去到如今轨迹预测模型经历了三个阶段：基于物理的方法，基于maneuver的方法，基于交互感知的方法。</p>
@@ -259,64 +269,6 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
       </tags>
   </entry>
   <entry>
-    <title>First-Hello World</title>
-    <url>/2023/06/24/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-<h2 id="quick-start"><a class="markdownIt-Anchor" href="#quick-start"></a> Quick Start</h2>
-<h3 id="create-a-new-post"><a class="markdownIt-Anchor" href="#create-a-new-post"></a> Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="run-server"><a class="markdownIt-Anchor" href="#run-server"></a> Run server</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="generate-static-files"><a class="markdownIt-Anchor" href="#generate-static-files"></a> Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="deploy-to-remote-sites"><a class="markdownIt-Anchor" href="#deploy-to-remote-sites"></a> Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-<h3 id="github同步"><a class="markdownIt-Anchor" href="#github同步"></a> GitHub同步</h3>
-<p>hexo clean</p>
-<p>hexo d -g</p>
-<p>会有一点延迟，更新得等一会</p>
-<h3 id="显示部分内容"><a class="markdownIt-Anchor" href="#显示部分内容"></a> 显示部分内容</h3>
-<p>在你写 md 文章的时候，可以在内容中加上 <code>&lt;!--more--&gt;</code>，这样首页和列表页展示的文章内容就是 <code>&lt;!--more--&gt;</code> 之前的文字，而之后的就不会显示了。</p>
-]]></content>
-      <categories>
-        <category>软件使用</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>GAT和GCN中的注意事项</title>
-    <url>/2023/08/24/GAT%E5%92%8CGCN%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
-    <content><![CDATA[<h1 id="inductive-learning-and-transductive-learning"><a class="markdownIt-Anchor" href="#inductive-learning-and-transductive-learning"></a> “Inductive learning” and “Transductive learning”</h1>
-<p>“Inductive learning”意为归纳学习，“Transductive learning”意为直推学习</p>
-<p>对于GCN而言我们认为其是：直推学习，也就是说当测试集出现了训练集未学习过的节点时即图结构发生了变化时，网络需要重新训练。</p>
-<p>对于GAT而言：归纳学习；也就是训练阶段见不到的数据（在图书剧中可以指新的节点，也可以指新的图）                                                                                                                                        直接进行预测而不需要重新训练。</p>
-<span id="more"></span>
-<p>GCN就像是没有权重的GAT一样，见如下公式：</p>
-<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>G</mi><mi>C</mi><mi>N</mi><mo>=</mo><mover accent="true"><mi>A</mi><mo>~</mo></mover><mi>X</mi><mi>W</mi><mspace linebreak="newline"></mspace><mi>G</mi><mi>A</mi><mi>T</mi><mo>=</mo><mo stretchy="false">(</mo><mover accent="true"><mi>A</mi><mo>~</mo></mover><mo>⊙</mo><mi>M</mi><mo stretchy="false">)</mo><mi>X</mi><mi>W</mi></mrow><annotation encoding="application/x-tex">GCN=\tilde{A}XW \\
-GAT=(\tilde A \odot M)XW
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9201899999999998em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9201899999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">A</span></span></span><span style="top:-3.6023300000000003em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.11110999999999999em;"><span class="mord">~</span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.1701899999999998em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9201899999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">A</span></span><span style="top:-3.6023300000000003em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.11110999999999999em;"><span class="mord">~</span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊙</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span></span></span></span></span></p>
-<p>这里的需不需要重新训练围殴认为是其关注的重点，对于GCN而言重点关注的<strong>图的全局结构</strong>，因此当图的结果变换的时候自然需要重新训练。</p>
-<p>而对于GAT而言虽说用到了邻接矩阵，但训练的目标是<mark>中心节点</mark>和<mark>邻居节点</mark>间的聚合操作。</p>
-<p>某种意义上来说，GCN是一种考虑了整体图结构的方法；而GAT一定程度上放弃了整体结构，这使得其能够完成Inductive任务。<br>
-链接：<a href="https://www.zhihu.com/question/409415383/answer/1361505060">https://www.zhihu.com/question/409415383/answer/1361505060</a></p>
-<p>其实是否确保inductive，本质上在于两点：首先是你要确保你这个算法的node-level input不能是one hot而必须是实在的node attribute，一旦onehot了就必是只能transductive，原因显然。其次是training方式，不能是依赖于整图的矩阵运算，而必须是graphsage里面appendix a的minibatch training模式下的分割方案，而这才是graphsage有底气说自己inductive牛逼的主要原因。你确保这两点，几乎现在市面上所有message passing架构的gnn都是inductive的。<br>
-链接：<a href="https://www.zhihu.com/question/409415383/answer/1361596817">https://www.zhihu.com/question/409415383/answer/1361596817</a></p>
-<p>这个地方还可以参考论文：<a href="https://www.researchgate.net/publication/352513259_A_Subgraph-based_Knowledge_Reasoning_Method_for_Collective_Fraud_Detection_in_E-commerce">https://www.researchgate.net/publication/352513259_A_Subgraph-based_Knowledge_Reasoning_Method_for_Collective_Fraud_Detection_in_E-commerce</a></p>
-<p>里面提到了了一个<strong>全局和局部</strong>的观念</p>
-]]></content>
-      <categories>
-        <category>GNN</category>
-      </categories>
-      <tags>
-        <tag>GNN</tag>
-        <tag>深度学习</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>pytorch_data&amp;detach</title>
     <url>/2023/08/24/pytorch-data-detach/</url>
     <content><![CDATA[<p>这是关于pytorch中的.data操和detach()操作的区分和介绍</p>
@@ -346,23 +298,6 @@ GAT=(\tilde A \odot M)XW
         <tag>深度学习</tag>
         <tag>计算机语言</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>插入图片</title>
-    <url>/2023/09/03/%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87/</url>
-    <content><![CDATA[<p>插入图片的方法：<a href="https://zhuanlan.zhihu.com/p/542101567">https://zhuanlan.zhihu.com/p/542101567</a></p>
-<p>注意：使用：</p>
-<span id="more"></span>
-<p><img src="image-20230902165946533.png" alt></p>
-<p>而不是</p>
-<p><img src="%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87%5Cimage-20230902165946533.png" alt>（此时这里的图片不会显示)</p>
-<p>也就是说路径要用 /这个，要是路径用了\会导致结果不会显示</p>
-<p>而且图片要插入到笔记同名的且文件夹中（会自动创建）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">用：![](插入图片/image-20230902165946533.png)，/</span><br><span class="line">不用：![](插入图片\image-20230902165946533.png)，\</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>软件使用</category>
-      </categories>
   </entry>
   <entry>
     <title>pytorch_torch.autograd.Function</title>
@@ -426,6 +361,81 @@ GAT=(\tilde A \odot M)XW
         <tag>深度学习</tag>
         <tag>计算机语言</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>GAT和GCN中的注意事项</title>
+    <url>/2023/08/24/GAT%E5%92%8CGCN%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
+    <content><![CDATA[<h1 id="inductive-learning-and-transductive-learning"><a class="markdownIt-Anchor" href="#inductive-learning-and-transductive-learning"></a> “Inductive learning” and “Transductive learning”</h1>
+<p>“Inductive learning”意为归纳学习，“Transductive learning”意为直推学习</p>
+<p>对于GCN而言我们认为其是：直推学习，也就是说当测试集出现了训练集未学习过的节点时即图结构发生了变化时，网络需要重新训练。</p>
+<p>对于GAT而言：归纳学习；也就是训练阶段见不到的数据（在图书剧中可以指新的节点，也可以指新的图）                                                                                                                                        直接进行预测而不需要重新训练。</p>
+<span id="more"></span>
+<p>GCN就像是没有权重的GAT一样，见如下公式：</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>G</mi><mi>C</mi><mi>N</mi><mo>=</mo><mover accent="true"><mi>A</mi><mo>~</mo></mover><mi>X</mi><mi>W</mi><mspace linebreak="newline"></mspace><mi>G</mi><mi>A</mi><mi>T</mi><mo>=</mo><mo stretchy="false">(</mo><mover accent="true"><mi>A</mi><mo>~</mo></mover><mo>⊙</mo><mi>M</mi><mo stretchy="false">)</mo><mi>X</mi><mi>W</mi></mrow><annotation encoding="application/x-tex">GCN=\tilde{A}XW \\
+GAT=(\tilde A \odot M)XW
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9201899999999998em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9201899999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">A</span></span></span><span style="top:-3.6023300000000003em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.11110999999999999em;"><span class="mord">~</span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.1701899999999998em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9201899999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">A</span></span><span style="top:-3.6023300000000003em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.11110999999999999em;"><span class="mord">~</span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⊙</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span></span></span></span></span></p>
+<p>这里的需不需要重新训练围殴认为是其关注的重点，对于GCN而言重点关注的<strong>图的全局结构</strong>，因此当图的结果变换的时候自然需要重新训练。</p>
+<p>而对于GAT而言虽说用到了邻接矩阵，但训练的目标是<mark>中心节点</mark>和<mark>邻居节点</mark>间的聚合操作。</p>
+<p>某种意义上来说，GCN是一种考虑了整体图结构的方法；而GAT一定程度上放弃了整体结构，这使得其能够完成Inductive任务。<br>
+链接：<a href="https://www.zhihu.com/question/409415383/answer/1361505060">https://www.zhihu.com/question/409415383/answer/1361505060</a></p>
+<p>其实是否确保inductive，本质上在于两点：首先是你要确保你这个算法的node-level input不能是one hot而必须是实在的node attribute，一旦onehot了就必是只能transductive，原因显然。其次是training方式，不能是依赖于整图的矩阵运算，而必须是graphsage里面appendix a的minibatch training模式下的分割方案，而这才是graphsage有底气说自己inductive牛逼的主要原因。你确保这两点，几乎现在市面上所有message passing架构的gnn都是inductive的。<br>
+链接：<a href="https://www.zhihu.com/question/409415383/answer/1361596817">https://www.zhihu.com/question/409415383/answer/1361596817</a></p>
+<p>这个地方还可以参考论文：<a href="https://www.researchgate.net/publication/352513259_A_Subgraph-based_Knowledge_Reasoning_Method_for_Collective_Fraud_Detection_in_E-commerce">https://www.researchgate.net/publication/352513259_A_Subgraph-based_Knowledge_Reasoning_Method_for_Collective_Fraud_Detection_in_E-commerce</a></p>
+<p>里面提到了了一个<strong>全局和局部</strong>的观念</p>
+]]></content>
+      <categories>
+        <category>GNN</category>
+      </categories>
+      <tags>
+        <tag>GNN</tag>
+        <tag>深度学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>插入图片</title>
+    <url>/2023/09/03/%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87/</url>
+    <content><![CDATA[<p>插入图片的方法：<a href="https://zhuanlan.zhihu.com/p/542101567">https://zhuanlan.zhihu.com/p/542101567</a></p>
+<p>注意：使用：</p>
+<span id="more"></span>
+<p><img src="image-20230902165946533.png" alt></p>
+<p>而不是</p>
+<p><img src="%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87%5Cimage-20230902165946533.png" alt>（此时这里的图片不会显示)</p>
+<p>也就是说路径要用 /这个，要是路径用了\会导致结果不会显示</p>
+<p>而且图片要插入到笔记同名的且文件夹中（会自动创建）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">用：![](插入图片/image-20230902165946533.png)，/</span><br><span class="line">不用：![](插入图片\image-20230902165946533.png)，\</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>软件使用</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>First-Hello World</title>
+    <url>/2023/06/24/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+<h2 id="quick-start"><a class="markdownIt-Anchor" href="#quick-start"></a> Quick Start</h2>
+<h3 id="create-a-new-post"><a class="markdownIt-Anchor" href="#create-a-new-post"></a> Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="run-server"><a class="markdownIt-Anchor" href="#run-server"></a> Run server</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="generate-static-files"><a class="markdownIt-Anchor" href="#generate-static-files"></a> Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="deploy-to-remote-sites"><a class="markdownIt-Anchor" href="#deploy-to-remote-sites"></a> Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h3 id="github同步"><a class="markdownIt-Anchor" href="#github同步"></a> GitHub同步</h3>
+<p>hexo clean</p>
+<p>hexo d -g</p>
+<p>会有一点延迟，更新得等一会</p>
+<h3 id="显示部分内容"><a class="markdownIt-Anchor" href="#显示部分内容"></a> 显示部分内容</h3>
+<p>在你写 md 文章的时候，可以在内容中加上 <code>&lt;!--more--&gt;</code>，这样首页和列表页展示的文章内容就是 <code>&lt;!--more--&gt;</code> 之前的文字，而之后的就不会显示了。</p>
+]]></content>
+      <categories>
+        <category>软件使用</category>
+      </categories>
   </entry>
   <entry>
     <title>用户新增预测挑战赛</title>
