@@ -1805,6 +1805,19 @@ pre code {
   top: 0;
   width: 100%;
 }
+.post-body a {
+  color: #000;
+}
+.post-body a:not(.btn) {
+  color: #428bca;
+  border-bottom: none;
+  font-weight: bold;
+}
+.post-body a:not(.btn):hover {
+  color: #ff7a7a;
+  font-weight: bold;
+  text-decoration: underline;
+}
 .post-gallery {
   display: flex;
   min-height: 200px;
@@ -2320,7 +2333,7 @@ mark.search-keyword {
 }
 header.header {
   background: var(--content-bg-color);
-  border-radius: initial;
+  border-radius: 20px 20px 20px 20px;
   box-shadow: initial;
 }
 @media (max-width: 991px) {
@@ -2357,7 +2370,7 @@ header.header {
   }
 }
 .main-inner {
-  border-radius: initial;
+  border-radius: 20px 20px 20px 20px;
   box-sizing: border-box;
   width: calc(100% - 252px);
 }
@@ -2498,7 +2511,7 @@ header.header {
 }
 .sidebar-inner {
   background: var(--content-bg-color);
-  border-radius: initial;
+  border-radius: 30px;
   box-shadow: initial;
   box-sizing: border-box;
   color: var(--text-color);
