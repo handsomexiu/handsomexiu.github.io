@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"handsomexiu.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null,"show_result":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"giscus","storage":true,"lazyload":false,"nav":null,"activeClass":"giscus"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="this blog is for survey of LLMs (Large language Models)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大模型综述（1）">
+<meta property="og:url" content="https://handsomexiu.github.io/2023/09/18/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0%EF%BC%881%EF%BC%89/index.html">
+<meta property="og:site_name" content="YNY&#39;s BLOG">
+<meta property="og:description" content="this blog is for survey of LLMs (Large language Models)">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://handsomexiu.github.io/2023/09/18/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0%EF%BC%881%EF%BC%89/image-20230918103207953.png">
+<meta property="og:image" content="https://handsomexiu.github.io/2023/09/18/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0%EF%BC%881%EF%BC%89/image-20230918103144917.png">
+<meta property="og:image" content="https://handsomexiu.github.io/2023/09/18/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0%EF%BC%881%EF%BC%89/image-20230918103052162.png">
+<meta property="article:published_time" content="2023-09-18T02:25:13.000Z">
+<meta property="article:modified_time" content="2023-09-18T02:33:26.107Z">
+<meta property="article:author" content="YNY">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="LLM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://handsomexiu.github.io/2023/09/18/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0%EF%BC%881%EF%BC%89/image-20230918103207953.png">
+
+
+<link rel="canonical" href="https://handsomexiu.github.io/2023/09/18/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0%EF%BC%881%EF%BC%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://handsomexiu.github.io/2023/09/18/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0%EF%BC%881%EF%BC%89/","path":"2023/09/18/大模型综述（1）/","title":"大模型综述（1）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>大模型综述（1） | YNY's BLOG</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">YNY's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">YOLO</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%BC%E8%BF%B0harnessing-the-power-of-llms-in-practice-a-survey-on-chatgpt-and-beyond"><span class="nav-number">1.</span> <span class="nav-text"> 综述：Harnessing the Power of LLMs in Practice ：A Survey on ChatGPT and Beyond</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#abstract"><span class="nav-number">2.</span> <span class="nav-text"> abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">3.</span> <span class="nav-text"> 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%AC%E6%96%87%E7%9B%AE%E7%9A%84"><span class="nav-number">4.</span> <span class="nav-text"> 本文目的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E5%AE%9E%E7%94%A8%E6%8C%87%E5%8D%97practical-guide-for-models"><span class="nav-number">5.</span> <span class="nav-text"> 模型实用指南（PRACTICAL GUIDE FOR MODELS）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#bert-style-language-models-encoder-decoder-or-encoder-only"><span class="nav-number">5.1.</span> <span class="nav-text"> BERT-style Language Models: Encoder-Decoder or Encoder-only</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gpt-style-language-models-decoder-only"><span class="nav-number">5.2.</span> <span class="nav-text"> GPT-style Language Models: Decoder-only</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%AF%B9%E8%AF%9D%E7%94%9F%E6%88%90%E4%BA%BA%E6%9C%BA%E5%AF%B9%E8%AF%9D"><span class="nav-number">5.2.1.</span> <span class="nav-text"> 问答系统和对话生成，人机对话</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%80%83"><span class="nav-number">5.2.1.1.</span> <span class="nav-text"> 思考</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AE%9E%E7%94%A8%E6%8C%87%E5%8D%97"><span class="nav-number">6.</span> <span class="nav-text"> 数据：实用指南</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#pretraining-data"><span class="nav-number">6.1.</span> <span class="nav-text"> Pretraining data</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#finetuning-data"><span class="nav-number">6.2.</span> <span class="nav-text"> Finetuning data</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#zero-annotated-data-%E9%80%9A%E7%94%A8%E5%A4%A7%E6%A8%A1%E5%9E%8B-zero-shot-%E9%85%8D%E7%BD%AE"><span class="nav-number">6.2.1.</span> <span class="nav-text"> Zero annotated data ：通用大模型 + zero-shot 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#few-annotated-data%E9%80%9A%E7%94%A8%E5%A4%A7%E6%A8%A1%E5%9E%8B-few-shot-in-context-learning"><span class="nav-number">6.2.2.</span> <span class="nav-text"> Few annotated data：通用大模型 + few-shot in-context learning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#abundant-annotated-data%E4%B8%B0%E5%AF%8C%E7%9A%84%E6%A0%87%E6%B3%A8%E6%95%B0%E6%8D%AE%E9%80%9A%E7%94%A8%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83%E6%A8%A1%E5%9E%8B"><span class="nav-number">6.2.3.</span> <span class="nav-text"> Abundant annotated data：丰富的标注数据：通用大模型&#x2F;微调模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93%E9%80%9A%E7%94%A8%E6%A8%A1%E5%9E%8B-vs-%E5%BE%AE%E8%B0%83%E6%A8%A1%E5%9E%8B%E7%9A%84%E9%80%89%E5%9E%8B"><span class="nav-number">6.2.4.</span> <span class="nav-text"> 小结：通用模型 vs. 微调模型的选型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#test-datauser-data"><span class="nav-number">6.3.</span> <span class="nav-text"> Test data&#x2F;user data</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#practical-guide-for-nlp-tasks%E4%BB%BB%E5%8A%A1%E5%AE%9E%E7%94%A8%E6%8C%87%E5%8D%97"><span class="nav-number">7.</span> <span class="nav-text"> PRACTICAL GUIDE FOR NLP tasks:任务实用指南</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#traditional-nlunatural-language-modeltasks"><span class="nav-number">7.1.</span> <span class="nav-text"> traditional NLU（natural language model）tasks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#no-use-case"><span class="nav-number">7.1.1.</span> <span class="nav-text"> No use case.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#use-cases"><span class="nav-number">7.1.2.</span> <span class="nav-text"> Use cases</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#generation-tasks"><span class="nav-number">7.2.</span> <span class="nav-text"> Generation tasks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#use-cases-2"><span class="nav-number">7.2.1.</span> <span class="nav-text"> Use cases</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#no-use-case-2"><span class="nav-number">7.2.2.</span> <span class="nav-text"> No use case.</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#knowledge-intensive-tasks"><span class="nav-number">7.3.</span> <span class="nav-text"> Knowledge-intensive tasks</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#use-cases-3"><span class="nav-number">7.3.1.</span> <span class="nav-text"> use cases</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#no-use-cases"><span class="nav-number">7.3.2.</span> <span class="nav-text"> No use cases</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#abilities-regarding-scaling"><span class="nav-number">7.4.</span> <span class="nav-text"> Abilities Regarding scaling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#use-case-with-reasoning"><span class="nav-number">7.4.1.</span> <span class="nav-text"> Use Case with reasoning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#use-cases-with-emergent-abilities"><span class="nav-number">7.4.2.</span> <span class="nav-text"> Use Cases with Emergent Abilities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#no-use-cases-and-understanding"><span class="nav-number">7.4.3.</span> <span class="nav-text"> No-Use Cases and Understanding.</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#miscellaneous-tasks%E6%9D%82%E9%A1%B9%E4%BB%BB%E5%8A%A1%E5%A4%9A%E4%BB%BB%E5%8A%A1"><span class="nav-number">7.5.</span> <span class="nav-text"> Miscellaneous tasks:杂项任务（多任务？）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#no-use-case%E5%A4%9A%E6%A8%A1%E6%80%81%E6%95%B0%E6%8D%AE%E9%9B%86%E5%A4%9A%E6%A8%A1%E6%80%81%E8%BE%93%E5%87%BA%E6%98%AF%E4%B8%80%E4%B8%AA%E9%9A%BE%E7%82%B9"><span class="nav-number">7.5.1.</span> <span class="nav-text"> No use case.(多模态数据集，多模态输出是一个难点)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#use-case"><span class="nav-number">7.5.2.</span> <span class="nav-text"> use case</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#real-world-tasks%E5%BE%88%E9%87%8D%E8%A6%81"><span class="nav-number">7.6.</span> <span class="nav-text"> Real world “tasks”！！！！！！！！！！！！！！！！（很重要）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BD%99%E8%80%83%E8%99%91"><span class="nav-number">8.</span> <span class="nav-text"> 其余考虑</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#efficiency"><span class="nav-number">8.1.</span> <span class="nav-text"> Efficiency</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E6%9C%AC"><span class="nav-number">8.1.1.</span> <span class="nav-text"> 成本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#latency%E5%BB%B6%E8%BF%9F"><span class="nav-number">8.1.2.</span> <span class="nav-text"> Latency：延迟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#parameter-efficient-tuning"><span class="nav-number">8.1.3.</span> <span class="nav-text"> Parameter-Efficient tuning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#trustworthiness%E5%8F%AF%E4%BF%A1%E8%B5%96%E6%88%91%E8%AE%A4%E4%B8%BA%E8%BF%99%E9%87%8C%E6%9B%B4%E5%83%8F%E6%98%AF%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%95%88%E6%9E%9C"><span class="nav-number">8.2.</span> <span class="nav-text"> Trustworthiness：可信赖（我认为这里更像是模型的效果）！！！！！！！</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#robustness-and-calibration"><span class="nav-number">8.2.1.</span> <span class="nav-text"> Robustness and Calibration.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fairness-and-bias"><span class="nav-number">8.2.2.</span> <span class="nav-text"> Fairness and Bias.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spurious-biases%E8%99%9A%E5%81%87%E5%81%8F%E8%A7%81"><span class="nav-number">8.2.3.</span> <span class="nav-text"> Spurious Biases.（虚假偏见）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#safety-challenges"><span class="nav-number">8.3.</span> <span class="nav-text"> Safety challenges！！！！！！！！！！！！</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hallucinations%E5%B9%BB%E8%A7%89%E5%B9%BB%E8%A7%86%E6%88%91%E8%A7%89%E5%BE%97%E8%BF%99%E9%87%8C%E6%9C%89%E4%B8%80%E4%BA%9Btrustworthiness%E4%B8%ADrobustness-and-calibration%E9%97%AE%E9%A2%98%E4%BA%86%E5%8F%AF%E8%83%BD%E6%9C%89%E7%82%B9%E4%BA%A4%E5%8F%89"><span class="nav-number">8.3.1.</span> <span class="nav-text"> Hallucinations(幻觉，幻视)！！！！！！！！！！！！！！（我觉得这里有一些Trustworthiness中Robustness and Calibration问题了，可能有点交叉）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#harmful-content%E6%9C%89%E5%AE%B3%E5%86%85%E5%AE%B9"><span class="nav-number">8.3.2.</span> <span class="nav-text"> Harmful content.（有害内容）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#privacy"><span class="nav-number">8.3.3.</span> <span class="nav-text"> Privacy</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%8C%91%E6%88%98%E4%B8%8E%E6%9C%AA%E6%9D%A5"><span class="nav-number">9.</span> <span class="nav-text"> 总结——大模型的挑战与未来</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="YNY"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">YNY</p>
+  <div class="site-description" itemprop="description">他强任他强，清风拂山岗</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/handsomexiu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;handsomexiu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1184817330@qq.com" title="E-Mail → mailto:1184817330@qq.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://handsomexiu.github.io/2023/09/18/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0%EF%BC%881%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="YNY">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YNY's BLOG">
+      <meta itemprop="description" content="他强任他强，清风拂山岗">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="大模型综述（1） | YNY's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          大模型综述（1）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-09-18 10:25:13 / 修改时间：10:33:26" itemprop="dateCreated datePublished" datetime="2023-09-18T10:25:13+08:00">2023-09-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/LLM/" itemprop="url" rel="index"><span itemprop="name">LLM</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>26k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>23 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>this blog is for survey of LLMs (Large language Models)</p>
+<span id="more"></span>
+<h1 id="综述harnessing-the-power-of-llms-in-practice-a-survey-on-chatgpt-and-beyond"><a class="markdownIt-Anchor" href="#综述harnessing-the-power-of-llms-in-practice-a-survey-on-chatgpt-and-beyond"></a> 综述：Harnessing the Power of LLMs in Practice ：A Survey on ChatGPT and Beyond</h1>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/wxgP42EI1ypcLKPsVqdH5A">https://mp.weixin.qq.com/s/wxgP42EI1ypcLKPsVqdH5A</a><br>
+<a target="_blank" rel="noopener" href="http://arthurchiao.art/blog/llm-practical-guide-zh/">http://arthurchiao.art/blog/llm-practical-guide-zh/</a></p>
+<h1 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> abstract</h1>
+<p>本文是一份<mark>大语言模型（LLMs）实用指南</mark>， 目的是帮助从业者和用户更好地完成他们的==自然语言处理（NLP）==相关任务 —— NLP 是 LLM 的典型使用场景（下游）。本文将从模型、数据和下游任务的角度讨论和分析 LLM 的选型和使用</p>
+<ul>
+<li>首先简要介绍 <mark>GPT 风格和 BERT 风格</mark>的大语言模型；</li>
+<li>然后讨论<mark>预训练</mark>数据、<mark>训练</mark>数据和<mark>测试</mark>数据对模型选型的影响；</li>
+<li>然后详细讨论大语言模型<mark>适合和不适合</mark>哪些自然语言处理任务（use and non-use cases）。</li>
+</ul>
+<p>此外，我们还探讨了大模型的 spurious biases，以及工程角度的<mark>效率、成本和延迟</mark>等重要因素， 以便从业者对实际部署大模型有一个全面了解。</p>
+<h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>我们从<mark>模型、数据和下游任务</mark> 的角度对LLMs（large language model）的使用进行讨论和见解。</p>
+<ul>
+<li>首先，我们对当前 GPT 和 BERT 风格的LLMs进行介绍和简要总结。</li>
+<li>然后，我们讨论<strong>预训练数据</strong>、训练数据和测试数据的影响。</li>
+<li>最重要的是，我们详细讨论了大语言模型在各种自然语言处理任务中的使用和不使用案例，例如知识密集型任务、传统自然语言理解任务、自然语言生成任务、涌现能力和注意事项用于特定任务。我们提出了各种用例和非用例（use cases and non-use cases）来说明LLMs在现实场景中的实际应用和局限性。我们还尝试了解数据的重要性以及与每个 NLP 任务相关的具体挑战。此外，我们还探讨了虚假偏差对LLMs的影响，并深入研究了其他基本考虑因素，例如效率、成本和延迟，以确保全面了解在实践中部署LLMs。本综合指南旨在为研究人员和从业者提供与LLMs合作的宝贵见解和最佳实践，从而使这些模型能够在广泛的 NLP 任务中成功实施。定期更新的LLMs实用指南资源精选列表可在 <a target="_blank" rel="noopener" href="https://github.com/Mooler0410/LLMsPracticalGuide">https://github.com/Mooler0410/LLMsPracticalGuide</a> 找到。</li>
+</ul>
+<p>近年来，大语言模型的快速发展对自然语言处理领域产生了革命性的影响 [12, 128, 131]。 这些强大的模型在各种 NLP 任务 —— 从<mark>自然语言理解</mark><strong>（NLU）到</strong><mark>生成式任务</mark><strong>（generation tasks）—— 中都展现出了巨大的潜力，甚至为</strong><mark>通用人工智能</mark>**（AGI）铺平了道路。<br>
+然而，有效且高效地利用这些模型需要实际了解它们的功能和局限性，以及 NLP 中涉及的数据和任务。</p>
+<h1 id="本文目的"><a class="markdownIt-Anchor" href="#本文目的"></a> 本文目的</h1>
+<p>作为一份给大模型从业者和用户的指南，本文主要关注<mark>下游 NLP 任务中如何使用 LLM</mark>。例如，</p>
+<ul>
+<li>为什么选择或不选择某些 LLM；</li>
+<li>如何根据模型大小、计算要求和特定领域预训练模型的可用性等等因素，选择最合适的 LLM。</li>
+<li>为从业人员和最终用户提供所需的实用知识，帮助他们成功利用 LLM 的强大功能完成自己的 NLP 任务<br>
+工作：</li>
+<li>首先，我们的工作通过讨论最重要的模型（如 GPT 式和 BERT 式架构）简要介绍了 LLM。</li>
+<li>然后，我们从数据角度深入探讨影响模型性能的关键因素，包括预训练数据、训练/调整数据和测试数据。</li>
+<li>最后，也是最重要的一点，我们深入探讨了各种具体的 NLP 任务，深入分析（offering insights into）了 LLM 在知识密集型任务、传统 NLU 任务和生成任务中的适用性，以及这些模型所具备的新兴能力和挑战性的现实世界场景。</li>
+<li>我们提供了详细的示例，以突出 LLM 在实际应用中的成功案例和局限性。<br>
+为了分析大型语言模型的能力，我们将它们与微调模型进行了比较。目前，关于大型语言模型和微调模型还没有公认的定义。考虑到实用性，我们在文章中提出了它们的定义：</li>
+<li>LLM 是在大量数据集上预先训练的庞大语言模型，无需针对特定任务的数据进行调整；
+<ul>
+<li>但这并不意味着大模型不可以微调，大模型也可以微调，提高对于任务的性能（few-shot那一块）。但是大模型提出来是在一个大的数据集上训练的，能处理的任务更加的广泛。更加的通用，泛化能力强。</li>
+</ul>
+</li>
+<li>fine-tuned模型通常是较小的语言模型，它们也经过预训练，然后在较小的、针对特定任务的数据集上进一步调整，以优化其在该任务上的性能。
+<ul>
+<li>针对特定的数据集，有点像“领域专家”<br>
+本文总结了以下 LLM 实用指南：</li>
+</ul>
+</li>
+<li><strong><mark>自然语言理解</mark></strong>：在数据分布不均或训练数据极少场景下，LLM 卓越的泛化能力（generalization ability）；</li>
+<li><strong><mark>自然语言生成</mark></strong>：利用 LLM 的能力，为各种应用程序创建连贯、上下文相关的高质量文本；</li>
+<li><strong><mark>知识密集型任务</mark></strong>：利用 LLM 中存储的大量知识，解决一些需要特定领域专业知识或世界常识（general world knowledge）的任务；</li>
+<li><strong><mark>推理能力</mark></strong>：了解和利用 LLM 的推理能力，提升基于上下文的决策能力和解决问题能力。</li>
+</ul>
+<h1 id="模型实用指南practical-guide-for-models"><a class="markdownIt-Anchor" href="#模型实用指南practical-guide-for-models"></a> 模型实用指南（PRACTICAL GUIDE FOR MODELS）</h1>
+<p>本节简要介绍当前业界最先进的 LLM。 这些模型在训练策略、模型架构和使用场景上有所不同。为了更清晰地理解 LLM 的发展， 本文将它们分为两种类型：</p>
+<ol>
+<li><strong><mark>encoder-decoder or encoder-only</mark></strong></li>
+<li><strong><mark>decoder-only</mark></strong><br>
+<img src="image-20230918103207953.png" alt="image-20230918103207953"><br>
+几点发现：</li>
+<li><strong><mark>decoder-only 模型逐渐成为 LLM 的主要发展趋势</mark></strong>。
+<ul>
+<li>LLM 早期阶段，encoder-only 和 encoder-decoder 模型更受欢迎；</li>
+<li>随着 2021 年 GPT-3 的横空出世，decoder-only 模型完成了一次漂亮的翻身仗；</li>
+<li>在 BERT 带来的最初爆炸性增长之后，encoder-only 模型逐渐开始失宠；</li>
+</ul>
+</li>
+<li><strong><mark>OpenAI 在 LLM 领域始终保持领先地位</mark></strong>。其他公司和机构正在努力追赶。 这种领导地位可能归因于 OpenAI 对其技术路线的坚守，即使最初大家并不看好这条路线；</li>
+<li><strong><mark>Meta 对开源 LLM 做出了重大贡献</mark></strong>，并促进了 LLM 的研究。 在考虑对开源社区尤其是 LLM 相关的贡献时，Meta 是最慷慨的商业公司之一，Meta 开发的所有 LLM 都是开源的；</li>
+<li><strong><mark>LLM 表现出闭源的趋势</mark></strong>。
+<ul>
+<li>LLM 早期阶段（2020 年之前），大多数模型都是开源的；</li>
+<li><strong>随着 GPT-3 的推出，公司越来越倾向于闭源他们的模型</strong>，如 PaLM、LaMDA 和 GPT-4:</li>
+<li>因此，学术研究人员进行 LLM 训练实验变得更加困难，<strong>基于 API 的研究可能成为学术界的主要方法</strong>；</li>
+</ul>
+</li>
+<li><strong><mark>encoder-decoder 模型仍然还有前途</mark></strong>。
+<ul>
+<li>业界仍然在这个方向积极探索，且大部分都是开源的；</li>
+<li>Google 对开源 encoder-decoder 架构做出了重大贡献，虽然 decoder-only 模型的灵活性和多功能性使得 Google 对这个方向的坚持似乎前途有些暗淡。<br>
+<img src="image-20230918103144917.png" alt="image-20230918103144917"></li>
+</ul>
+</li>
+</ol>
+<h2 id="bert-style-language-models-encoder-decoder-or-encoder-only"><a class="markdownIt-Anchor" href="#bert-style-language-models-encoder-decoder-or-encoder-only"></a> BERT-style Language Models: Encoder-Decoder or Encoder-only</h2>
+<p>自然语言数据易于获取。为了更好地利用超级数据集，人们已经提出了很多<mark>无监督训练</mark>范式（unsupervised training paradigms）， 这也促进了自然语言的<mark>无监督学习</mark>（unsupervised learning）。<br>
+这其中，一种常见的方式是在<mark>给定上下文的情况下，预测句子中掩掉（masked）的单词</mark>。 这种训练范式被称为遮掩语言模型（<strong><mark>Masked Language Model，MLM</mark></strong>）<br>
+（AE ：Autoencoder Language Models）</p>
+<ul>
+<li>模型能深入理解单词之间以及单词与上下文的关系，</li>
+<li>使用 <strong><mark>Transformer 架构</mark></strong> 等技术在大量文本语料库上进行训练。<br>
+典型模型包括</li>
+<li>BERT [28]</li>
+<li>RoBERTa [65]</li>
+<li>T5 [84]。<br>
+这种模型在许多 NLP 任务（如情感分析和 named entity 识别）中取得了 state-of-the-art 的结果， 已经成为自然语言处理领域的重要工具。</li>
+</ul>
+<p>尽管语言模型通常在架构上是任务不可知的（<strong><mark>task-agnostic</mark></strong>）， 但都需要在特定下游任务的数据集上进行微调。</p>
+<h2 id="gpt-style-language-models-decoder-only"><a class="markdownIt-Anchor" href="#gpt-style-language-models-decoder-only"></a> GPT-style Language Models: Decoder-only</h2>
+<p>研究人员发现，扩展语言模型的参数规模（<strong><mark>scaling up</mark></strong>） 能显著提高少样本（few-shot）甚至零样本（zero-shot）性能[16]。 少样本和零样本最成功的模型是<mark>自回归语言模型</mark> （Autoregressive Language Models，ALM），</p>
+<ul>
+<li>这些模型的训练方式：<strong><mark>给出前面的单词，生成这句话的下一个单词</mark></strong>。</li>
+<li>这些模型已被广泛用于文本生成和问题回答等 NLP 任务。<br>
+典型的自回归语言模型包括，</li>
+<li>GPT-3 [16]</li>
+<li>OPT [126]</li>
+<li>PaLM [22]</li>
+<li>BLOOM [92]<br>
+这其中，GPT-3 是一个划时代的模型，它首次通过<mark>提示</mark>（prompting）和<mark>上下文学习</mark>（in-context learning） 展示了少样本/零样本也能取得不错的性能，展现了自回归语言模型的优越性。<br>
+还有一些模型针对特定任务进行了优化，如</li>
+<li>CodeX [2]：代码生成</li>
+<li>BloombergGPT [117] ：金融领域<br>
+最近的突破是 <strong><mark>ChatGPT</mark></strong>，它专门针对对话任务优化了 GPT-3，从而在各种实际应用中 互动性、连贯性，以及更好的上下文理解能力。<br>
+更加适用于生成类型的任务</li>
+</ul>
+<p>ChatGPT：总结：</p>
+<ul>
+<li>BERT适用于需要深度理解上下文的任务，它主要用于双向任务的分类和理解。</li>
+<li>GPT适用于生成任务，它主要用于自然语言生成，如文本生成、对话生成和文本摘要等。</li>
+<li>对于某些任务，BERT和GPT可以相互补充和结合使用，以获得更好的性能，例如，BERT可以用于理解上下文，然后GPT可以用于生成自然语言响应。</li>
+</ul>
+<h3 id="问答系统和对话生成人机对话"><a class="markdownIt-Anchor" href="#问答系统和对话生成人机对话"></a> 问答系统和对话生成，人机对话</h3>
+<p>对话生成（Dialog Generation）和问答系统（Question Answering System）都属于自然语言处理领域，但它们在任务和功能上有明显的区别：</p>
+<ol>
+<li><strong>任务目标</strong>：
+<ul>
+<li><strong>对话生成</strong>：对话生成系统的主要目标是生成自然流畅的对话文本，模拟人与人之间的对话交流。这包括生成对话中的问题、回答和对话内容，通常是一个连续性的文本流。对话生成系统通常用于构建聊天机器人、虚拟助手、客服代理等。</li>
+<li><strong>问答系统</strong>：问答系统的主要目标是回答特定问题的文本，根据用户提出的问题从给定的数据或知识库中提取或生成正确的答案。问答系统通常依赖于文档检索、自然语言理解和信息提取技术，以提供准确的答案。</li>
+</ul>
+</li>
+<li><strong>输入与输出</strong>：
+<ul>
+<li><strong>对话生成</strong>：对话生成系统通常接受一系列对话轮次（例如，用户问题和系统回应）作为输入，并生成连续的文本响应作为输出，可以是一句话或多句话的对话。</li>
+<li><strong>问答系统</strong>：问答系统接受用户提出的问题（通常是单个问题）作为输入，并生成一个准确的答案作为输出。答案通常是短文本或短语。</li>
+</ul>
+</li>
+<li><strong>数据源</strong>：
+<ul>
+<li><strong>对话生成</strong>：对话生成系统通常不需要特定的数据源，可以是基于事先定义的规则、预训练模型或从实际对话中学习的数据。</li>
+<li><strong>问答系统</strong>：问答系统需要一个特定的数据源，通常是包含问题和答案的知识库、文档集合或数据库。系统需要从这些数据源中检索信息以回答用户问题。</li>
+</ul>
+</li>
+<li><strong>应用领域</strong>：
+<ul>
+<li><strong>对话生成</strong>：对话生成主要应用于创建具有自然语言交互能力的应用程序，如聊天机器人、虚拟助手、社交媒体机器人等。</li>
+<li><strong>问答系统</strong>：问答系统通常应用于信息检索、知识库查询、自动问答、搜索引擎、智能搜索等需要准确回答用户问题的领域。<br>
+虽然对话生成和问答系统有不同的任务和用途，但它们也可以在某些情况下结合使用。例如，一个问答系统可以用于从知识库中提取答案，然后将答案转化为自然语言并与用户进行对话以提供更友好的用户体验。因此，这两种技术通常可以相互补充，根据具体需求进行选择和整合。</li>
+</ul>
+</li>
+</ol>
+<h4 id="思考"><a class="markdownIt-Anchor" href="#思考"></a> 思考</h4>
+<p>1、感觉任务的要求是偏问答系统和检索<br>
+2、如何构造数据集</p>
+<h1 id="数据实用指南"><a class="markdownIt-Anchor" href="#数据实用指南"></a> 数据：实用指南</h1>
+<p>在本节中，我们将讨论数据在为下游任务选择合适模型时的关键作用。数据对模型有效性的影响始于预训练阶段，并一直持续到训练和推理阶段。<br>
+注意：</p>
+<ol>
+<li>LLMs generalize better than fine-tuned models in downstream tasks facing out-of-distribution data, such as adversarial examples and domain shifts.</li>
+<li>LLMs are preferable to fine-tuned models when working with limited annotated data, and both can be reasonable choices when abundant annotated data is available, depending on specific task requirements.</li>
+<li>It’s advisable to choose models pre-trained on fields of data that are similar to downstream tasks.</li>
+</ol>
+<h2 id="pretraining-data"><a class="markdownIt-Anchor" href="#pretraining-data"></a> Pretraining data</h2>
+<p>预训练数据在大语言模型的开发中起着关键作用。</p>
+<ol>
+<li>作为 <strong><mark>LLM 超能力</mark></strong>（remarkable capabilities）[5，47] <strong><mark>的基础</mark></strong>， 预训练数据的质量、数量和多样性显著影响 LLM 的性能[124]。 常用的预训练数据包括<mark>多种文本数据</mark>，例如书籍、文章和网站。 数据经过精心挑选，以确保全面代表人类知识、语言差别和文化观点。
+<ol>
+<li>#思考
+<ol>
+<li><strong><mark>对于自身的任务也需要数据集能够充分的体现任务的要求，要问答/查询的内容。</mark></strong></li>
+</ol>
+</li>
+</ol>
+</li>
+<li>预训练数据的重要性在于它能为语言模型提供丰富的单词知识、语法、句法和语义理解，以及识别上下文和生成连贯反应的能力。 预训练数据的<mark>多样性</mark>也对模型性能起着至关重要的作用，LLM 的性能高度依赖于<mark>预训练数据的组成</mark>。<strong>LLM 的选择在很大程度上取决于预训练数据的成分</strong>。 例如，
+<ul>
+<li>PaLM [22] 和 BLOOM [92] <mark>多语言任务</mark>（multilingual tasks）和<mark>机器翻译</mark>方面表现出色，因为它们有丰富的多语言预训练数据；</li>
+<li><strong>PaLM 还很擅长<mark>问答任务</mark>，因为预训练数据中包含大量社交媒体对话和书籍语料库 [22]；</strong></li>
+<li>GPT-3.5（code-davinci-002）预训练数据集中集成代码数据，因此<mark>代码执行和代码补全</mark> 能力很强。<br>
+简而言之，在针对 NLP 任务做 LLM 选型时，建议选择那些<mark>在类似数据领域上进行过预训练</mark>的模型。</li>
+</ul>
+</li>
+</ol>
+<h2 id="finetuning-data"><a class="markdownIt-Anchor" href="#finetuning-data"></a> Finetuning data</h2>
+<p>如果已经有了通用大模型，接下来想部署到线上环境提供服务，那根据手头 <strong><mark>标注数据（annotated data）的多少</mark></strong>，</p>
+<ul>
+<li>零（zero）</li>
+<li>少（few）</li>
+<li>丰富（abundant）<br>
+可以在部署之前先对大模型进行<mark>配置调整或模型微调</mark>。</li>
+</ul>
+<h3 id="zero-annotated-data-通用大模型-zero-shot-配置"><a class="markdownIt-Anchor" href="#zero-annotated-data-通用大模型-zero-shot-配置"></a> Zero annotated data ：通用大模型 + zero-shot 配置</h3>
+<p>这种情况即没有标注数据，那就没有微调的可能了；在配置方面，将 LLM 设置为 <strong><mark><code>zero-shot</code></mark></strong> 是最合适的。LLM 的 zero-shot methods [120] 已经比之前更好。此外，这种场景由于<mark>模型参数保持不变</mark>remain unaltered）， 也<mark>不存在参数更新过程</mark>（parameter update process）， 因此可以避免灾难性遗忘（catastrophic forgetting）[49]。</p>
+<ul>
+<li>“灾难性遗忘”（Catastrophic Forgetting）是指神经网络在学习新任务时忘记了之前学习的任务的现象。这是神经网络训练中一个常见的问题，特别是在迁移学习（Transfer Learning）或连续学习（Continual Learning）的情况下。当神经网络被训练用于多个任务时，它有时会非常快速地忘记以前学习的任务，从而在新任务上表现得更好。</li>
+<li>灾难性遗忘通常是由于神经网络的权重更新机制造成的。当神经网络学习新任务时，它会调整权重以适应新的数据和目标。然而，这些权重的调整可能导致之前学习的任务的权重被覆盖或忘记，从而降低了在以后执行这些任务时的性能</li>
+</ul>
+<h3 id="few-annotated-data通用大模型-few-shot-in-context-learning"><a class="markdownIt-Anchor" href="#few-annotated-data通用大模型-few-shot-in-context-learning"></a> Few annotated data：通用大模型 + few-shot in-context learning</h3>
+<p>这种情况下，可以将手头<mark>少量的 few-shot examples 直接通过 prompt 输入到 LLM 中</mark>， 这被称为上下文学习==（in-context learning）==， 这些数据可以有效地指导 LLM 针对具体任务进行优化（generalize to the task）。（<strong><mark>prompt engineering</mark></strong>）</p>
+<ul>
+<li>[16] 中指出，one-shot 和 few-shot 性能取得了显著的提高，甚至可以与 SOTA fine-tuned open-domain 模型的性能相当。</li>
+<li>通过 scaling[16]，LLMs 的 zero/few-shot 能力可以进一步提高。</li>
+<li>还有人提出了一些 few-shot 学习方法来增强微调模型，例如 meta-learning[56]或 transfer learning[88]。但是，由于微调模型的规模较小且容易过拟合，性能可能不如使用 LLMs。</li>
+</ul>
+<h3 id="abundant-annotated-data丰富的标注数据通用大模型微调模型"><a class="markdownIt-Anchor" href="#abundant-annotated-data丰富的标注数据通用大模型微调模型"></a> Abundant annotated data：丰富的标注数据：通用大模型/微调模型</h3>
+<p>如果有大量特定任务的注释数据，就可以考虑微调模型和 LLM。在大多数情况下，微调模型可以很好地适应数据。在这种情况下，选择使用微调模型还是 LLM 取决于特定任务，也取决于许多因素，包括所需的性能、计算资源和部署限制。</p>
+<ul>
+<li>大多数情况下，对模型进行微调（fine-tuning the model）可以很好地适应数据；</li>
+<li>通用模型的一个优势是可用于满足一些约束条件，例如隐私 [99]。</li>
+</ul>
+<p>总之，这种情况下使用微调模型还是 LLM 就看具体任务以及所需的性能、计算资源和部署约束等因素了。</p>
+<h3 id="小结通用模型-vs-微调模型的选型"><a class="markdownIt-Anchor" href="#小结通用模型-vs-微调模型的选型"></a> 小结：通用模型 vs. 微调模型的选型</h3>
+<p>简而言之</p>
+<ul>
+<li>不管标注数据有多有少，通用大模型都是可以用的；</li>
+<li>有丰富的 annotated data 时可以考虑使用微调模型。</li>
+</ul>
+<h2 id="test-datauser-data"><a class="markdownIt-Anchor" href="#test-datauser-data"></a> Test data/user data</h2>
+<p>在部署 LLM 用于实际任务时，经常面临测试/用户数据与训练数据之间分布差异导致的性能问题。 这些差异可能涉及到</p>
+<ul>
+<li>domain shifts [132]</li>
+<li>out-of-distribution variations [31]</li>
+<li>adversarial examples [82]<br>
+它们极大<mark>降低了微调模型</mark>在实际应用中的<mark>有效性</mark>。 原因是<mark>微调模型都是基于特定数据分布拟合的</mark>，generalize to OOD data 的能力较差。</li>
+</ul>
+<p>另一方面，通用模型在这种情况表现得相当好，因为它们没有明确的拟合过程。 此外，最近的<mark>人类反馈强化学习</mark>（Reinforcement Learning from Human Feedback， <mark><code>RLHF</code></mark>）进一步增强了 LLM 的泛化能力[77]。例如，</p>
+<ul>
+<li>InstructGPT 展示了在 a wide range of tasks (各种任务)的多种指令中的熟练理解能力，甚至偶尔还能理解混合语言指令，尽管这样的指令很少。</li>
+<li>ChatGPT 在大多数 adversarial and out-of-distribution (OOD) 分类和翻译任务上表现出一致的优势 [109]。 <strong>它在理解对话相关的文本方面的优越性，使得它在 DDXPlus 数据集 [101]上表现出色，这是一个设计用于 OOD 评估的医学诊断数据集。</strong></li>
+</ul>
+<h1 id="practical-guide-for-nlp-tasks任务实用指南"><a class="markdownIt-Anchor" href="#practical-guide-for-nlp-tasks任务实用指南"></a> PRACTICAL GUIDE FOR NLP tasks:任务实用指南</h1>
+<p>In this section, we discuss in detail <strong>the use cases and no use cases</strong> for LLMs in various downstream NLP tasks and the corresponding model abilities. And in Figure 2, we summarize all discussions into a decision flow. It can be a guide for a quick decision while facing a task.<br>
+<strong>很多时候，“大模型很好！”这个断言后紧跟着的问题就是“大模型怎么用，什么时候用？”，面对一个具体任务时，我们是应该选择微调、还是不假思索的上手大模型</strong>？这篇论文总结出了一个实用的“决策流”，根据“是否需要模仿人类”，“是否要求推理能力”，“是否是多任务”等一系列问题帮我们判断是否要去使用大模型。<br>
+<img src="image-20230918103052162.png" alt="image-20230918103052162"></p>
+<h2 id="traditional-nlunatural-language-modeltasks"><a class="markdownIt-Anchor" href="#traditional-nlunatural-language-modeltasks"></a> traditional NLU（natural language model）tasks</h2>
+<p>传统的 NLU 任务是 NLP 中的一些基本任务，包括文本分类、命名实体识别（NER）、entailment prediction等。其中许多任务旨在作为大型人工智能系统（<code>这里和大模型不一样，这里更像是多个任务多个模型的组合</code>）的中间步骤，例如用于构建知识图谱的 NER。<br>
+在传统的 NLU 任务中，微调模型通常是比 LLM 更好的选择，当需要很强的泛化能力的时候LLM能够提供帮助。</p>
+<h3 id="no-use-case"><a class="markdownIt-Anchor" href="#no-use-case"></a> No use case.</h3>
+<ul>
+<li>在大多数自然语言理解任务中，如 GLUE[106] 和 SuperGLUE[105] 中的任务，<strong>如果这些任务有丰富的注释良好的数据，并且测试集上包含极少的分布外示例（OOD）</strong>，那么微调模型仍然有更好的性能。对于不同的任务和数据集，小型微调模型与 LLM 之间的差距是不同的。</li>
+<li><strong>文本分类</strong>：在文本分类中，LLMs 普遍逊色于微调模型；</li>
+<li><strong>情感分析</strong>：在 IMDB 与 SST 任务上大模型与微调模型表现相仿，而在如毒性监测任务中，几乎所有的大模型都差于微调模型；
+<ul>
+<li>对于另一项标志性文本分类任务–毒性检测，差距则要大得多。所有 LLM 在这项任务上都表现不佳，在 CivilComments [13] 上，即使是最好的 LLM 也只比随机猜测 [59] 好。另一方面，大多数流行的微调模型可以获得更好的性能[33]，而 Perspective API 3 仍然是检测毒性的最佳模型之一。该应用程序接口由一个基于多语言 BERT 的模型和从该模型中提炼出的几个较小的单语言 CNN 提供支持，该模型是根据公开可用的毒性数据和几个较小的单语言 CNN 调整的。这<strong>可能是由于毒性是由语言表达中的细微差别定义的，而大型语言模型无法仅根据所提供的输入准确理解这项任务。</strong></li>
+</ul>
+</li>
+<li><strong>自然语言推理</strong>：在 RTE 与 SNLI 上，微调模型优于 LLMs，在 CB 等数据中，LLMs与微调模型相仿；</li>
+<li><strong>问答</strong>：在 SQuADv2、QuAC 和许多其他数据集上，微调模型具有更好的性能，而在 CoQA 上，LLMs 表现与微调模型性能相仿；</li>
+<li><strong>信息检索</strong>：LLMs 尚未在信息检索领域广泛应用，信息检索的任务特征使得没有自然的方式为大模型建模信息检索任务；</li>
+<li><strong>命名实体识别</strong>：在命名实体识别中，大模型仍然大幅度逊色于微调模型，在 CoNLL03 上微调模型的性能几乎是大模型的两倍，但是命名实体识别作为一个经典的 NLP 中间任务，很有可能会被大模型取代。
+<ul>
+<li>这段文本讨论了一些低级别中间任务，这些任务不是为了常规用户而是为了高级任务而设计的，例如命名实体识别（NER）和依赖解析。作者指出，目前的语言模型（LLMs）在这些任务上的表现不足，因为LLMs的当前评估主要集中在实际应用任务上。根据可用的评估结果，对于NER任务，LLMs仍然面临挑战，而经过微调的模型性能大约是LLMs的两倍。作者认为这些中间任务可能会很快消失，因为LLMs可以在不依赖这些中间任务的情况下完成高级任务（例如，依赖解析用于编码任务；NER用于某些文本生成任务）。<br>
+简而言之，这段文本指出LLMs在一些特定任务上的表现不够理想，但随着LLMs的发展，它们可能会取代这些任务，因此这些任务可能会变得不再重要。</li>
+</ul>
+</li>
+</ul>
+<p>总之，对于大多数传统自然语言理解的任务，微调模型的效果更好(就在benchmark的数据集上的表现和计算成本)。LLM模型通常是fine-tuned model的10/100倍大小；<strong>One possible cause for the inferior performance of LLMs on certain tasks can be the design of instructions/prompts</strong>.将 IR 和句子标记等任务的输入转换为few/zero-shot形式并非易事。另一方面，微调模型的能力上限尚未达到，一些方法如 FLAN-tuning [67] 可以进一步提高 NLU 任务的性能。另一个有趣的发现是，在 NLU 任务上，经过微调，masked language models（如 T5[85]）比相同规模的大多数自回归语言模型更好，而最近的一些结果表明，这一差距可以通过以下方式弥补：scaling[22]。</p>
+<h3 id="use-cases"><a class="markdownIt-Anchor" href="#use-cases"></a> Use cases</h3>
+<ul>
+<li>代表性任务之一是杂项文本分类(miscellaneous text classification)[59]。与情感分析等经典的特定领域文本分类任务相比，杂项文本分类处理各种主题和类别，这些主题和类别之间可能没有明确或牢固的关系。
+<ul>
+<li>它更接近现实世界的案例，并且很难格式化以使用微调模型。</li>
+</ul>
+</li>
+<li>另一个是对抗性自然语言推理（ANLI）[74]。这是一个困难的数据集，由三轮（R1、R2 和 R3）对抗性挖掘的自然语言推理问题组成。
+<ul>
+<li>LLM 在 ANLI 上表现出了卓越的性能，尤其是在 R3 和 R2 上。这两个例子都表明，在传统的 NLP 任务中，LLM 对分布外(OOD)和稀疏注释的数据(zero-shot，few-shot)具有出色的泛化能力，超过了微调模型的能力</li>
+</ul>
+</li>
+</ul>
+<p>同时，在一些小众的领域，如 Miscellaneous Text Classification，Adversarial NLI 等任务中 ，LLMs 由于更强的泛化能力因而具有更好的性能，<strong>但是在目前而言，对于有成熟标注的数据而言，微调模型可能仍然是对传统任务的最优解</strong></p>
+<h2 id="generation-tasks"><a class="markdownIt-Anchor" href="#generation-tasks"></a> Generation tasks</h2>
+<p><strong>自然语言生成大致包括两大类任务，其目标是创建连贯、有意义且与上下文相适应(切合语境)的符号序列</strong>。</p>
+<ul>
+<li>第一类任务侧重于将输入文本转换为新的符号序列，例如段落摘要和机器翻译等任务。</li>
+<li>第二类是 &quot;开放式 &quot;生成，目的是从头开始生成文本或符号，以准确匹配输入描述，例如编写电子邮件、撰写新闻文章、创作虚构故事和编写代码。<br>
+由于具有很强的生成能力和创造力，LLM 在大多数生成任务中都表现出优势。</li>
+</ul>
+<h3 id="use-cases-2"><a class="markdownIt-Anchor" href="#use-cases-2"></a> Use cases</h3>
+<p>生成任务要求模型全面了解输入内容或要求，并具有一定的创造性。这是LLM所擅长的。</p>
+<ul>
+<li><strong>文本摘要</strong>：对于文本摘要而言，如果使用传统的如 ROUGE 等的自动评估指标，LLMs 并没有表现出明显的优势，但是如果引入人工评估结果，LLMs 的表现则会大幅优于微调模型。这其实表明当前这些自动评估指标有时候并不能完整准确的反应文本生成的效果；</li>
+<li><strong>机器翻译</strong>：对于机器翻译这样一个拥有成熟商业软件的任务而言，LLMs 的表现一般略逊于商业翻译工具，但在一些冷门语言的翻译中，LLMs 有时表现出了更好的效果，譬如在罗马尼亚语翻译英语的任务中，LLMs 在零样本和少样本的情况下击败了微调模型的 SOTA；
+<ul>
+<li>在机器翻译（MT）中，尽管考虑到 BLEU[78] 等一些自动指标，LLM 的平均性能略逊于一些商业翻译工具[45]，但 LLM 可以胜任翻译工作。LLM 尤其擅长将一些低资源语言文本翻译成英语文本，例如在 WMT’16 的罗马尼亚语-英语翻译[11]中，zero-shot或few-shot LLM 的表现优于 SOTA 微调模型[22]。<strong>这主要是由于英语资源构成了预训练数据的主要部分（这里需要和下面的任务区分）</strong>。BLOOM [92] 在更多的多语言数据上进行了预训练，因此在富资源和低资源翻译中都能获得更好的翻译质量。另一个有趣的发现是，BLOOM 在罗曼语之间实现了良好的翻译质量，即使是来自加利西亚语的翻译也是如此，而加利西亚语并不包含在预训练数据中。一个合理的解释是，来自同一语言组中某些语言的文本可以帮助 LLMs 从相似性中学到更多。如果能在预训练数据中加入更多的多语言文本，翻译能力可能会进一步提高。
+<ul>
+<li><code>但是在no use case的案列中，英语翻译成少有的语言的时候就会有fine-tuned model效果略优于LLMs，可能是由于其余的翻译样本之间无法互补，而且没有学习到细节</code></li>
+</ul>
+</li>
+<li>这样其实还是再强调在少样本或者零样本上，LLMs更加的合适</li>
+</ul>
+</li>
+<li><strong>开放式生成</strong>：在开放式生成方面，显示是大模型最擅长的工作，LLMs 生成的新闻文章几乎与人类编写的真实新闻无法区分，在代码生成、代码纠错等领域 LLMs 都表现了令人惊讶的性能。</li>
+</ul>
+<h3 id="no-use-case-2"><a class="markdownIt-Anchor" href="#no-use-case-2"></a> No use case.</h3>
+<p>微调模型，如 DeltaLM+Zcode [118]，在大多数资源丰富的翻译和资源极少的翻译任务中仍然表现最佳。</p>
+<ul>
+<li>在资源丰富的机器翻译中，微调模型的性能略优于 LLM [22, 92]。而在资源极其匮乏的机器翻译中，如英语-哈萨克语翻译，微调模型的表现明显优于 LLM。<code>这里和机器翻译那一块有点冲突</code>
+<ul>
+<li>可能是fine-tuned model的精细化控制导致的
+<ul>
+<li>在某些情况下，小型微调模型可以更好地进行精细控制，因为它们可能更容易调整以适应任务特定的需求。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="knowledge-intensive-tasks"><a class="markdownIt-Anchor" href="#knowledge-intensive-tasks"></a> Knowledge-intensive tasks</h2>
+<p><strong>知识密集型 NLP 任务指的是一类非常依赖背景知识、特定领域专业知识或一般现实世界知识的任务。</strong> 这些任务超越了简单的模式识别或语法分析，<strong>需要对我们的现实世界拥有“常识”并能正确的使用</strong>。它们高度依赖于对<strong>特定实体、事件和现实世界</strong><code>常识</code>的<mark>记忆和适当(正确)利用</mark>。</p>
+<ul>
+<li>LLMs拥有丰富的现实世界知识，在知识密集型任务中表现出色。</li>
+<li>当知识要求与学习到的知识不匹配时，或者面对只需要上下文知识的任务时，LLMs 就会陷入困境。
+<ul>
+<li>个人感觉大模型只有预训练，没有微调，模型可能对任务的匹配不高</li>
+</ul>
+</li>
+</ul>
+<h3 id="use-cases-3"><a class="markdownIt-Anchor" href="#use-cases-3"></a> use cases</h3>
+<p>一般来说，有了数十亿个训练词库和参数，LLM 比微调模型拥有更多的真实世界知识</p>
+<ul>
+<li><strong>闭卷问答</strong>：在 Closed-book Question-Answering 任务中，要求模型在没有外部信息的情况下回答事实性的问题，在许多数据集如 NaturalQuestions、WebQuestions、TriviaQA 上 LLMs 都表现了更好的性能，尤其在 TriviaQA 中，零样本的 LLMs 都展现了优于微调模型的性能表现；</li>
+<li><strong>大规模多任务语言理解</strong>：大规模多任务语言理解（MMLU）包含 57 个不同主题的多项选择题，也要求模型具备一般性的知识，在这一任务中最令人印象深刻的当属 GPT-4，在 MMLU 中获得了 86.5% 的正确率。</li>
+<li>此外，Big-bench[96]中的一些任务旨在探测 LLM 并推断其未来能力（probe LLMs and extrapolate their future capabilities），这些任务严重依赖于对现实世界知识的记忆。在这类任务中，一些 LLM 的表现优于人类的平均水平，甚至与人类的最佳表现不相上下。例如，“印度教知识”（Hindu_knowledge）任务要求模型提供有关印度教神话的事实；“元素周期”（Periodic Elements）任务要求模型具有从元素周期表中预测元素名称的能力；“物理”（Physics）任务则通过要求模型提供解决给定物理问题所需的公式来测试模型的物理知识。</li>
+</ul>
+<h3 id="no-use-cases"><a class="markdownIt-Anchor" href="#no-use-cases"></a> No use cases</h3>
+<p>值得注意的是，<strong>在知识密集型任务中，大模型并不是百试百灵，有些时候，大模型对现实世界的知识可能是无用甚至错误的，这样“不一致”的知识有时会使大模型的表现比随机猜测还差</strong>。如重定义数学任务（Redefine Math）中要求模型在原含义和从重新定义的含义中做出选择，这需要的能力与大规模语言模型的学习到的知识恰恰相反，因此，LLMs 的表现甚至不如随机猜测。<br>
+There are some other tasks requiring knowledge different from that learned by LLMs. The required knowledge is not that learned by LLMs about the real world. In such tasks, LLMs are not notably superior.</p>
+<ul>
+<li>有些任务只要求模型捕捉上下文中的自含知识。输入的上下文知识足以让模型做出预测。对于这些任务，小型微调模型可以很好地完成。机器阅读理解（MRC）就是这样一项任务。MRC 任务提供几个段落，要求模型根据这些段落预测问题的答案。我们在上一节讨论了 MRC，因为它也是一项传统的 NLU 任务</li>
+<li>另一种情况是，LLMs 中有关现实世界的知识对任务毫无用处，甚至所需的知识与现实世界相反。因此，LLM 无法很好地完成此类任务。在某些情况下，不一致的知识甚至会使 LLM 比随机猜测更糟糕。例如，在 Big-Bench 中，Mnist ascii 任务要求模型说出 ASCII 艺术所代表的数字。这项任务所要求的能力与现实世界的知识毫无关系。此外，在 &quot;逆缩放现象 &quot;竞赛[70]中，&quot;重新定义数学 &quot;任务重新定义了一个常用符号，并要求模型在原始含义和重新定义后的含义之间做出选择。该任务的要求与 LLMs 的知识形成鲜明对比，因此 LLMs 的表现甚至不如随机猜测。</li>
+</ul>
+<p>作为 LLM 中真实世界知识的替代方案，允许访问额外的知识，因此模型可以通过<strong>检索增强</strong>（retrieval augmentation）获得任务所需的足够知识。检索增强的基本思想是在预测之前增加一个额外的信息检索步骤，即从大型语料库中检索与任务相关的一些有用文本。然后，模型将根据输入上下文和检索到的文本进行预测。有了检索到的附加信息，closed-book任务就可以变成 &quot;open-book &quot;任务。在这种情况下，微调模型在规模较小的情况下也能发挥很好的作用，因为所需的知识可以通过检索获得。例如，在有额外语料库的 NaturalQuestions [52] 中，检索增强模型 [44, 48] 比其他任何方法都要好得多。</p>
+<ul>
+<li>这句话的意思是，在大型语言模型（LLMs，如GPT系列）中，为了完成某项任务，不仅可以利用模型自身的训练知识，还可以通过访问外部知识来获取足够的信息。这外部知识通常以检索的方式被引入到模型中，以增强模型在特定任务上的性能。</li>
+</ul>
+<h2 id="abilities-regarding-scaling"><a class="markdownIt-Anchor" href="#abilities-regarding-scaling"></a> Abilities Regarding scaling</h2>
+<p>除了推理之外，随着模型规模的增长，<strong>模型还会浮现一些 Emergent Ability，譬如符合操作、逻辑推导、概念理解等等</strong>。<strong>但是还有类有趣的现象称为“U形现象”，指随着 LLMs 规模的增加，模型性能出现先增加后又开始下降的现象</strong>，典型的代表就是前文提到的重定义数学的问题，这类现象呼唤着对大模型原理更加深入与细致的研究。</p>
+<p>LLM 的扩展（如参数、训练计算等）可以极大地增强预训练语言模型的能力。随着模型规模的扩大，模型在一系列任务中的能力通常会增强。（<strong><mark>智能涌现？？</mark></strong>）</p>
+<ul>
+<li>从某些指标可以看出，<strong>性能与模型规模呈幂律关系</strong>。例如，用于衡量语言建模性能的交叉熵损失（cross-entropy loss）会随着模型规模的指数增长而线性下降，这也被称为 <strong>“扩展法则”[41, 47]</strong>。对于某些关键能力，如推理能力，模型规模的扩大使这些能力逐渐从非常低的状态转变为可用状态，甚至接近人类的能力。在本节中，我们将从 LLM 的能力和行为以及扩展的角度概述 LLM 的使用情况。<br>
+<strong>注意：</strong></li>
+<li>1）随着模型规模的指数级增长，LLM 在算术推理和常识推理等推理能力方面变得尤为突出。</li>
+<li>(2）随着 LLM 规模的扩大，<strong>新出现的能力</strong>成为使用的偶然性，如文字处理能力和逻辑能力。</li>
+<li>(3) 在许多情况下，由于对大型语言模型的能力如何随着规模的扩大而发生变化的了解有限，其性能并不会随着规模的扩大而稳步提高。</li>
+</ul>
+<h3 id="use-case-with-reasoning"><a class="markdownIt-Anchor" href="#use-case-with-reasoning"></a> Use Case with reasoning</h3>
+<p>推理涉及对信息的理解、推断和决策，是人类智力的重要方面之一。对于 NLP 来说，这也是一项挑战。现有的许多推理任务可分为常识推理和算术推理。</p>
+<ul>
+<li><strong>算术推理</strong>：不夸张的说，GPT-4 的算术与推理判断的能力超过了以往的任何模型，在 GSM8k、SVAMP 和 AQuA 上大模型都具有突破性的能力，值得指出的是，通过思维链（CoT）的提示方式，可以显著的增强 LLMs 的计算能力；
+<ul>
+<li>测试算术推理的任务对人类来说微不足道，旨在挑战将自然语言转化为数学符号和多步骤推理的能力。</li>
+</ul>
+</li>
+<li><strong>常识推理</strong>：常识推理要求大模型记忆事实信息并进行多步推理，在大多数数据集中，LLMs 都保持了对微调模型的优势地位，特别在 ARC-C （三-九年级科学考试困难题）中，GPT-4 的表现接近 100%（96.3%）。</li>
+</ul>
+<h3 id="use-cases-with-emergent-abilities"><a class="markdownIt-Anchor" href="#use-cases-with-emergent-abilities"></a> Use Cases with Emergent Abilities</h3>
+<p>模型的扩展还赋予模型一些前所未有的、超越幂律规则的神奇能力。<br>
+These abilities are called <strong>“emergent ability”.</strong>  As defined in [113], emergent abilities of LLMs are abilities that are not present in smaller-scale models but are present in large-scale models。</p>
+<ul>
+<li>这意味着这种能力无法通过推断较小规模模型的性能改进来预测，而且一旦规模超过一定范围，模型就会在某些任务上突然获得良好性能。</li>
+<li>新出现的能力通常是不可预测和出人意料的，导致任务随机或意外出现</li>
+</ul>
+<p>处理单词操作是一种典型的新兴能力。它指的是学习符号操作的能力，如反向单词[16]（颠倒的单词），在这种情况下，给模型一个反向拼写的单词，模型必须输出原来的单词。例如GPT-3[16]显示了单词排序和单词解词任务的新兴能力。PaLM [22] 在 ASCII 单词识别 4 和 hyperbaton 5 任务中表现出突现能力。语言模型的逻辑能力往往会随着模型规模的扩大而出现，如逻辑推理、逻辑序列和逻辑网格谜题。此外，其他任务，如高级编码（如自动调试、代码行描述）和概念理解（如新概念、简单图灵概念），也是大型语言模型具有新兴能力的用例。</p>
+<h3 id="no-use-cases-and-understanding"><a class="markdownIt-Anchor" href="#no-use-cases-and-understanding"></a> No-Use Cases and Understanding.</h3>
+<p>虽然如上所述，在大多数情况下，较大的模型会带来更好的性能，但仍有许多例外情况，在选择合适的模型时应加以考虑。（这里的模型更偏向于模型大小）</p>
+<ul>
+<li>在某些任务中，随着 LLM 规模的增大，其性能开始下降，例如：Redefine-math：测试当常用符号被重新定义为其他含义时，语言模型是否能够处理这些符号；Intothe-unknown：要求模型选择哪条信息有助于回答问题；Memo-trap：要求 LM 以类似名言的方式写出一个短语，但结尾却不同6。这也被称为<strong>反向缩放现象（Inverse Scaling Phenomenon）</strong>。</li>
+<li>在 LLM 的缩放中观察到的另一个有趣现象叫做 <strong>U 型现象</strong> [114]。顾名思义，这种现象指的是随着 LLM 规模的增加，它们在某些任务上的性能最初会有所提高，但随后开始下降，最终才会再次提高，例如在以下任务上：（Hindsight-neglect）：测试语言模型是否能够根据预期值来评估一个赌注是否值得下；否定质量保证（NegationQA）：这项任务采用现有的多项选择数据集，并否定每道题的一部分，以观察语言模型是否对否定敏感；引语重复（Quote-repetition）：要求模型重复(复述)提示中给出的句子，并用少量的例子来帮助它识别任务。</li>
+<li><strong>因此，应注意性能下降的风险，如果任务与我们刚才讨论的任务类似，则应仔细考虑是否使用庞大的 LLM。</strong></li>
+</ul>
+<p><strong>更深入地了解 LLM 中的涌现能力、反尺度现象和 U 型现象（inverse scaling phenomenon and U-shape phenomenon），对于推进该领域的研究至关重要。</strong> 从某种意义上说，<mark>U 型现象表明，小尺度模型和大尺度模型的预测具有不同的内在机制</mark>。从这个角度看，U 型现象可以看作是反尺度现象的一种转化，是由于足够大的模型的一些突现能力造成的[114]。GPT-4[76]在某些情况下表现出反比例现象的逆转，例如在一项名为 &quot;Hindsight Neglect &quot;的任务中。如<strong>何解释 LLMs 在缩放过程中的这些行为仍是一个未决问题</strong>。人们提出了几种假设。对于突发性能力，</p>
+<ul>
+<li>一种解释是一项任务可能有多个关键步骤，在 LLM 大到足以处理每个步骤之前，它无法处理这项任务；</li>
+<li>另一种解释则侧重于评估指标的粒度[113]。对于反比例放现象和 U 形现象，解释主要集中在1、模型过度依赖先验信息而非输入prompt，2、有效但误导性的少量实例，以及3、在困难任务中分散注意力的较易任务等方面 [114]（模型更加关注简单任务，对困难任务的注意力不多）。
+<ul>
+<li><strong>模型对其先前信息的过度依赖</strong>：这表示模型在处理任务时过于依赖其在预训练阶段学到的通用知识，而不是充分关注任务输入提示。这可能导致模型在特定任务上的表现不佳，<code>因为它太过专注于以前的知识，而不是任务的具体要求</code>。</li>
+<li><strong>有效但具有误导性的few-shot示例</strong>：这指的是一些示例或训练样本，它们看似有效，但实际上可能会误导模型。<code>这些示例可能会导致模型学到不准确或不合理的规律，从而影响其在实际任务上的性能</code>。</li>
+<li><strong>分散注意力的更简单任务在困难任务中</strong>：这意味着模型可能会在面对困难任务时分散注意力，更多地关注那些相对容易的任务。<code>这可能导致模型在困难任务上的表现不佳，因为它没有足够的专注力或资源来解决那些更具挑战性的任务。</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="miscellaneous-tasks杂项任务多任务"><a class="markdownIt-Anchor" href="#miscellaneous-tasks杂项任务多任务"></a> Miscellaneous tasks:杂项任务（多任务？）</h2>
+<p><strong>注意</strong>：</p>
+<ul>
+<li>对于与大型预训练语言模型（LLMs）的预训练目标和数据差距较大的任务，Fine-tuned模型或专用模型仍然有它们的用武之地。（对LLMs不适用的任务）</li>
+<li>LLM 在模仿人类、数据注释和生成方面表现出色。它们还可用于 NLP 任务的质量评估，并具有可解释性等优势。</li>
+</ul>
+<h3 id="no-use-case多模态数据集多模态输出是一个难点"><a class="markdownIt-Anchor" href="#no-use-case多模态数据集多模态输出是一个难点"></a> No use case.(多模态数据集，多模态输出是一个难点)</h3>
+<p>由于目标和训练数据的不同，LLM 在完成某些任务时通常会遇到困难。<br>
+尽管 LLM 在各种自然语言处理任务中取得了显著的成功，但它们在回归任务中的表现却不那么令人印象深刻。例如，ChatGPT 在评估句子相似性的回归任务 GLUE STS-B 数据集上的表现就不如经过微调的 RoBERTa [130]。<strong>回归任务通常涉及预测连续值而不是离散标签</strong>，这给 LLM 带来了独特的挑战。<strong>LLM 性能不佳的一个主要原因是语言建模目标与回归任务目标之间的内在差异</strong>。==LLM 的设计目的是预测序列中的下一个单词或生成连贯的文本，其预训练的重点是捕捉语言模式和关系。==因此，它们的内部表示可能并不适合对连续的数字输出建模。此外，<strong>LLM 主要针对文本数据进行训练，侧重于捕捉自然语言处理的复杂性。</strong> <code>因此，LLM 在多模态数据（涉及处理文本、图像、音频、视频、动作和机器人等多种数据类型）上的表现在很大程度上仍有待探索</code>。而经过微调的多模态模型，如 BEiT[110] 和 PaLI [19]，仍然在视觉问题解答（VQA）和图像字幕等许多任务中占主导地位。尽管如此，最近推出的 GPT-4 [76] 已经在<strong>多模态融合</strong>方面迈出了一步，但对其能力仍缺乏详细的评估。</p>
+<h3 id="use-case"><a class="markdownIt-Anchor" href="#use-case"></a> use case</h3>
+<ul>
+<li><strong>LLM 非常善于模仿人类、充当聊天机器人并执行各种任务</strong>。由 LLM 驱动的 ChatGPT 在与人类的多次对话中表现出的一致性、可靠性、信息量和鲁棒性令人惊讶。人类反馈程序在获得这些能力方面发挥了重要作用（RLHF：人类反馈强化学习）</li>
+<li><strong>LLM 既可以充当优秀的注释者，也可以生成数据，用于数据扩增</strong>，例如[27, 29, 99, 121, 122]。在某些任务中，一些 LLM 与人类注释者的效果不相上下[37]。而从 GPT3.5 中收集的文本（text-davinci-003）已被用作训练其他语言模型的类人教学示范[100]。</li>
+<li><strong>LLM 也可用于某些 NLG 任务的质量评估，如摘要和翻译。</strong> 在摘要任务中，GPT-4 作为一种评价器比其他方法实现了更高的人机相关性（higher correlation with humans），而且幅度很大[64]。其他一些基于 LLM 的评价器[34, 50, 64, 108]也在更多的 NLG 任务中显示出良好的人机对齐性，尤其是与传统的自动指标相比。但 LLM 评估器可能偏向于 LLM 生成的文本 [64]。</li>
+<li>此外，正如我们在上文所讨论的，LLM 的某些能力除了能提高性能外，还能带来其他好处，例如可解释性。LLM 的 CoT（chain-of-thought） 推理能力可以显示 LLM 是如何得出预测结果的，这在实例层面上是一种很好的解释，同时还能提高性能。</li>
+</ul>
+<h2 id="real-world-tasks很重要"><a class="markdownIt-Anchor" href="#real-world-tasks很重要"></a> Real world “tasks”！！！！！！！！！！！！！！！！（很重要）</h2>
+<p>在本节的最后一部分，我们将讨论 LLM 和微调模型在现实世界 &quot;任务 &quot;中的应用。我们对 &quot;任务 &quot;一词的使用比较宽泛，因为现实世界中的场景往往缺乏像学术界那样格式化的定义。许多对模型的请求甚至不能被视为 NLP 任务。模型在现实世界中面临的挑战来自三个方面</p>
+<ul>
+<li>`举例来说，请求模型播放音乐、控制物联网设备、执行图像识别任务等，都是不属于传统的NLP任务，因为它们需要涉及到不同类型的数据和领域知识，而不仅仅是文本数据。
+<ul>
+<li><code>这句话的主要观点是，模型面临各种各样的请求，其中一些请求超出了NLP的范围，可能需要更广泛的能力，包括对多模态数据的处理、硬件控制等等，而不仅仅是纯粹的文本理解和生成。因此，要满足这些不同类型的请求，模型可能需要更多的功能和适应能力</code></li>
+</ul>
+</li>
+<li><strong>嘈杂（噪声）/非结构化输入</strong>：现实世界的输入来自现实世界的非专家。他们对如何与模型交互知之甚少，甚至无法流畅地使用文本。因此，真实世界的输入数据可能很杂乱，包含错别字、口语和混合语言，这与用于预训练或微调的格式良好的数据不同。</li>
+<li><strong>Tasks not formalized by academia:学术界暂未确定的任务</strong>：在现实世界中，学术界通常对任务定义不明确，并且比学术环境中的任务更加多样化。<mark>用户经常提出不完全属于预定义类别的查询或请求，有时单个查询中有多个任务。</mark></li>
+<li><strong>Following users’instructions.</strong>：用户的请求可能包含多个隐式意图（例如对输出格式的特定要求），或者如果没有后续问题，他们期望的预测可能不清楚。<strong><mark>模型需要理解用户意图并提供与这些意图一致的输出。</mark></strong><br>
+<strong>本质上，现实世界中的这些挑战来自于用户的请求与为特定任务设计的任何 NLP 数据集的分布存在显着偏差。公共 NLP 数据集并不反映模型的使用方式 [77]。</strong><br>
+<mark>LLMs are better suited to handle real-world scenarios compared to fine-tuned models. However, evaluating the effectiveness of models in the real world is still an open problem.</mark></li>
+</ul>
+<p><strong>处理这种真实世界的场景需要应对模糊性、理解上下文和处理噪声输入。</strong></p>
+<ul>
+<li>与微调模型相比，LLMs 在这方面的能力更强，因为它们是在包含各种写作风格、语言和领域的不同数据集上训练出来的。</li>
+<li>此外，LLMs 还具有很强的生成开放域响应的能力（open-domain responses），因此非常适合这些场景。
+<ul>
+<li><strong>开放领域响应（Open-Domain Responses）</strong> 是指一种自然语言处理和人工智能领域的概念，指的是计算机系统或AI模型在回答问题、提供信息或进行对话时，不受特定领域、主题或上下文的限制。换句话说，这种响应是广泛适用于各种不同话题和问题的，而不仅仅限于某一特定领域或主题。——聊天机器人</li>
+<li>与开放领域响应相对应的是<strong>封闭领域响应（Closed-Domain Responses）</strong>，后者限制了模型的响应范围，通常用于特定领域或任务，例如在医疗保健领域回答医学问题，或在金融领域回答金融相关问题。</li>
+</ul>
+</li>
+<li>另一方面，微调模型通常是为特定的、定义明确的任务定制的，可能难以适应新的或意想不到的用户请求。它们在很大程度上依赖于明确的目标和完善的训练数据，这些数据指定了模型应该学习遵循的指令类型。由于微调模型更专注于特定的分布和结构化数据，因此在处理嘈杂的输入时可能会比较吃力。<strong>微调模型通常需要一个辅助系统来处理非结构化上下文、确定可能的意图，并相应地完善模型的响应。</strong></li>
+</ul>
+<p>此外，一些机制，如指令调整（instruction tuning）[91, 112]和人类对齐调整（human alignment tuning）[77]，进一步提高了 LLM 的能力，使其更好地理解和遵循用户指令。<strong>这些方法在保持连贯性和一致性的同时，提高了模型生成有益、无害和诚实响应的能力</strong>[77, 91, 112]。<code>虽然这两种方法都能使 LLM 更好地泛化到未见过的任务和指令中</code>，但我们注意到，人类标注者更喜欢为人类对齐(human alignment)而调整的模型[77]，而不喜欢用来自公共 NLP 任务（如 FLAN [112] 和 T0 [91]）的指令调整的模型。<code>原因可能与微调模型劣势的原因类似：公共 NLP 任务/数据集是为方便自动评估而设计的，它们只能涵盖真实世界使用的一小部分</code>（在自然语言生成文本摘要那一块内容提到了这一点）。</p>
+<p><strong>涉及真实世界场景时，主要问题之一是如何评估模型是否优秀</strong>。由于没有任何正式的任务或衡量标准，<mark>对模型有效性的评估只能依靠人工标注者的反馈</mark>。考虑到人工评估的复杂性和成本，目前还没有对微调模型和 LLM 进行大规模、系统化的比较。不过，LLM（如 chatGPT）的巨大成功和普及在一定程度上证实了 LLM 的优越性。</p>
+<h1 id="其余考虑"><a class="markdownIt-Anchor" href="#其余考虑"></a> 其余考虑</h1>
+<p>尽管 LLM 适用于各种下游任务，但还有一些其他因素需要考虑，如<strong>效率和可信度</strong>。我们对效率的讨论包括 LLM 的训练成本、推理延迟和参数效率调整策略。同时，<mark>我们对可信度的研究包括鲁棒性与校准、公平性与偏差、潜在的虚假相关性以及 LLMs 的安全性挑战。</mark><br>
+Remark ：</p>
+<ol>
+<li>Light, local, fine-tuned models should be considered rather than LLMs, especially for those who are sensitive to the cost or have strict latency requirements. Parameter-Efficient tuning（参数高效微调） can be a viable option for model deployment and delivery.</li>
+<li>The zero-shot approach of LLMs prohibits the <strong>learning of shortcuts from task-specific datasets</strong> , which is prevalent in fine-tuned models. Nevertheless, LLMs still demonstrate a degree of shortcut learning issues.
+<ol>
+<li>大模型主打一个泛化，通用，不希望学习一些特定的联系，导致在输出的时候因为某种联系造成不良的影响。</li>
+</ol>
+</li>
+<li>Safety concerns associated with LLMs should be given utmost importance as the potentially harmful or biased outputs, and hallucinations from LLMs can result in severe consequences. Some methods such as human feedback have shown promise in mitigating these problems.
+<ol>
+<li>与 LLM 相关的安全问题应得到高度重视，因为 LLM <strong>可能产生的有害或偏差输出以及幻觉会导致严重后果</strong>。一些方法（如人工反馈）已显示出缓解这些问题的前景。</li>
+</ol>
+</li>
+</ol>
+<h2 id="efficiency"><a class="markdownIt-Anchor" href="#efficiency"></a> Efficiency</h2>
+<p>实际部署除了要考虑模型准确性，<strong><mark>性能、成本和延迟</mark></strong> 都是重要考虑因素，。<br>
+实践中，从业者必须考虑<mark>效率和效果</mark> （efficiency with effectiveness）之间的平衡。</p>
+<h3 id="成本"><a class="markdownIt-Anchor" href="#成本"></a> 成本</h3>
+<p>训练，能耗，数据及大小，Flops（计算成本），硬件要求。<br>
+如果要使用API接口的话，价格上也是比较昂贵的，（也可能导致恶意攻击）。</p>
+<ul>
+<li>GPT-3.5-turbo 通用聊天服务的收费标准为 $0.002 per 1k token；</li>
+<li>对于需要定制模型的用户，训练成本为每 $ 0.003 per 1k token，使用成本为 $0.12 per 1k token [4]；<br>
+因此，对于无法承担如此大成本的用户，如小型初创企业、个人用户等，小型微调模型是更好、更合理的选择。</li>
+</ul>
+<h3 id="latency延迟"><a class="markdownIt-Anchor" href="#latency延迟"></a> Latency：延迟</h3>
+<p>延迟是实际部署 LLM 需要考虑的关键因素。</p>
+<ul>
+<li><strong>Inference time</strong>：是衡量延迟的常用指标，它高度依赖于<mark>模型大小、架构和 token 大小</mark></li>
+<li>由于LLM通常过于庞大，无法在单个用户的机器上运行，企业通过API提供LLM服务。<strong>API的延迟</strong>可以根据用户的位置而变化，OpenAI API服务对单个请求的平均延迟可以从几百毫秒到几秒不等。</li>
+<li>对于无法接受高延迟的情况，大型 LLM 可能不适用。例如，在许多信息检索应用中，<code>可扩展性至关重要</code>。
+<ul>
+<li><strong><mark>搜索引擎</mark></strong> 需要非常高效的推理，否则就没有意义。</li>
+<li><strong><mark><code>InstructGPT</code></mark></strong> davinci v2（175B*）的理想<mark>去噪推理时间</mark>（idealized denoised inference time） （i.e. a query-passage pair to be scored）<strong><mark><code>0.21s/request</code></mark></strong>，这对于网络搜索引擎来说太慢了。</li>
+</ul>
+</li>
+</ul>
+<h3 id="parameter-efficient-tuning"><a class="markdownIt-Anchor" href="#parameter-efficient-tuning"></a> Parameter-Efficient tuning</h3>
+<p>在实际应用中，我们可以在一些特定的数据集上对模型进行调优。<strong>参数高效调优</strong>( Parameter-Efficient Tuning，PET )是一种有效的技术，<strong>可以在冻结预训练LLMs的大部分参数的同时调整模型参数(或额外的参数)的小部分。</strong> <mark>PEFT的主要目标是在保持原有模型性能的前提下，大幅降低计算和存储成本</mark>。</p>
+<ul>
+<li>常用的PET技术有LoRA [ 42 ]、Prefix Tuning [ 58 ]、P - Tuning [ 62、63 ]等。作为一个例子，LoRA（Low-Rank Adaptation :低秩自适应）方法保持了预训练模型的权重，并将低秩矩阵融入到Transformer架构的每一层。这种方法极大地减少了后续任务需要训练的参数数量，从而提高了整体效率。</li>
+<li><strong>All these PFT methods can be helpful either for fine-tuning a model to a specific task or tuning LLMs to meet special requirements like human alignment.</strong></li>
+</ul>
+<p>大模型必然是未来很长一段时间我们工作生活的一部分，而对于这样一个与我们生活高度同频互动的“大家伙”，<strong>除了性能、效率、成本等问题外，大规模语言模型的安全问题几乎是大模型所面对的所有挑战之中的重中之重</strong>，<mark>机器幻觉</mark>是大模型目前还没有极佳解决方案的主要问题，大模型输出的有偏差或有害的幻觉将会对使用者造成严重后果。同时，随着 LLMs 的“公信度”越来越高，用户可能会过度依赖 LLMs 并相信它们能够提供准确的信息，这点可以预见的趋势增加了大模型的安全风险。</p>
+<p>除了误导性信息外，<strong>由于 LLMs 生成文本的高质量和低成本，LLMs 有可能被利用为进行仇恨、歧视、暴力、造谣等攻击的工具，LLMs 也有可能被攻击以未恶意攻击者提供非法信息或者窃取隐私</strong>，据报道，三星员工使用 ChatGPT 处理工作时意外泄漏了最新程序的源代码属性、与硬件有关的内部会议记录等绝密数据。</p>
+<h2 id="trustworthiness可信赖我认为这里更像是模型的效果"><a class="markdownIt-Anchor" href="#trustworthiness可信赖我认为这里更像是模型的效果"></a> Trustworthiness：可信赖（我认为这里更像是模型的效果）！！！！！！！</h2>
+<p><strong><mark>考虑到LLMs现在涉及医疗、金融和法律等敏感领域，确保它们是可信的并且能够产生可靠的输出至关重要。</mark></strong></p>
+<h3 id="robustness-and-calibration"><a class="markdownIt-Anchor" href="#robustness-and-calibration"></a> Robustness and Calibration.</h3>
+<p><strong>LLMs的准确性和鲁棒性被证明具有很强的相关性</strong>[ 59 ]。场景上精度较高的模型也具有较好的鲁棒性。然而，在额外的应用特定任务数据上进行调整后，零样本的鲁棒性变差[ 116 ]。这可能是由于过拟合导致的，由于模型的复杂度极高，且来自下游任务的训练样本有限，导致泛化性较差[ 43 ]。类似地，人们观察到，由于<strong>过参数化</strong>[ 51 ]，<strong>微调模型会导致显著的误校准（miscalibrations）</strong>。</p>
+<ul>
+<li>因此，当稳健性和校准是关键考虑因素时，微调模型可能不是最佳选择。</li>
+<li>然而，<strong>人类对齐</strong>已经被发现是增强模型鲁棒性的潜在解决方案</li>
+<li>另一方面，实现模型的最优校准取决于所使用的场景和适应过程。</li>
+</ul>
+<p>鲁棒性还一个就是得应对噪声的攻击</p>
+<h3 id="fairness-and-bias"><a class="markdownIt-Anchor" href="#fairness-and-bias"></a> Fairness and Bias.</h3>
+<p><strong>LLMs已被证明表现出不同的对待（处理,待遇）和影响</strong>，使社会偏见长期存在，并可能导致歧视[ 10、17]。<strong>为了保证所有用户的公平和公正</strong>，在NLP模型的开发和部署中解决这些问题是至关重要的。<code>人口统计学群体之间的表现差异可以作为公平问题的指标</code>。LLMs特别容易受到公平问题的影响，因为在方言、宗教、性别和种族等人口统计学类别中观察到了显著的表现差异[ 59 ]。然而，研究表明，<strong>与人类指令对齐的模型可以提高LLM的性能，而与它们的大小无关</strong>，其中InstructGPT模型( davinci v2 )表现出比其他LLM更小的性能差异[ 23 ]。</p>
+<h3 id="spurious-biases虚假偏见"><a class="markdownIt-Anchor" href="#spurious-biases虚假偏见"></a> Spurious Biases.（虚假偏见）</h3>
+<p>在预训练和微调范式下的各种自然语言理解任务中都观察到了捷径学习问题（shortcut learning problem），其中模型在预测[ 31、35、98]时<strong>严重依赖于微调数据中输入和标签之间的虚假相关性</strong>。</p>
+<ul>
+<li>例如，在阅读理解任务中，微调模型往往关注问题与原文之间单词的词汇匹配，忽略了预期的阅读理解任务本身[ 53 ]。</li>
+<li>相比之下，大型语言模型LLMs并不直接在微调数据集上训练，这使得它们学习微调数据集中存在的捷径特征的可能性较小，从而增强了模型的泛化能力。</li>
+<li>然而，LLMs并不是万无一失的，在in-context学习过程中可能会表现出一些捷径学习
+<ul>
+<li>例如，最近的初步研究已经开始调查基于prompt的方法在大规模语言模型[ 111、129 ]中的鲁棒性。一项这样的研究评估了GPT - 3在文本分类和信息提取任务上的小样本学习性能[ 129 ]，<code>并揭示了被检查的LLMs容易受到大多数标签偏差和位置偏差的影响，他们倾向于根据答案在训练数据中的频率或位置来预测答案。</code>
+<ul>
+<li>此外，这些LLMs表现出共同的token偏见，偏爱在其预训练语料中普遍存在的答案。最近的研究表明，这种位置偏差可以通过选择适当的prompt 来减轻[ 68 ]。总的来说，虽然LLMs显著降低了微调模型中普遍存在的捷径学习问题，但它们仍然存在</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="safety-challenges"><a class="markdownIt-Anchor" href="#safety-challenges"></a> Safety challenges！！！！！！！！！！！！</h2>
+<p>LLMs在推理、知识保持和编码等许多领域都表现出了极强的能力。随着它们变得更加强大和像人一样，<strong>它们以重要方式影响人们的观点和行为的潜力也越来越大</strong>。因此，一些新的安全挑战应该考虑到我们的社会，并在最近的工作[ 75、76 ]中引起了许多关注</p>
+<h3 id="hallucinations幻觉幻视我觉得这里有一些trustworthiness中robustness-and-calibration问题了可能有点交叉"><a class="markdownIt-Anchor" href="#hallucinations幻觉幻视我觉得这里有一些trustworthiness中robustness-and-calibration问题了可能有点交叉"></a> Hallucinations(幻觉，幻视)！！！！！！！！！！！！！！（我觉得这里有一些Trustworthiness中Robustness and Calibration问题了，可能有点交叉）</h3>
+<p><mark>LLMs可能产生&quot;幻觉&quot;，或产生荒谬或不真实的内容，在各种应用中会对信息的质量和可靠性产生显著的负面影响。</mark>（<strong>生成看似合理、实际错误的文本</strong>）<br>
+<strong>随着LLMs变得越来越有说服力和可信性，用户可能会过度依赖它们，并相信它们能在他们熟悉的领域提供准确的信息。</strong></p>
+<ul>
+<li>如果模型产生的内容完全是虚假的或误导性的，<strong>导致基于该信息做出不正确的决定或行动，这可能特别危险</strong>。这些结果可能在许多领域产生严重后果，如医疗、金融或公共政策，其中信息的准确性和可靠性至关重要。为了缓解这些问题，来自人类反馈的强化学习( RLHF )被广泛使用，[ 75,77]和LLMs本身已经集成到循环中[ 75 ]。
+<ul>
+<li>上次看见一个用知识图谱解决大模型幻视的问题</li>
+</ul>
+</li>
+</ul>
+<h3 id="harmful-content有害内容"><a class="markdownIt-Anchor" href="#harmful-content有害内容"></a> Harmful content.（有害内容）</h3>
+<p>由于LLMs生成的文本具有较高的连贯性、质量和可读性，LLMs中的有害内容会造成重大危害，包括仇恨言论、歧视、煽动暴力、虚假叙述，甚至社会工程学攻击。为检测和纠正这些内容而实施的保障措施可以是缓解[ 97 ]。这些LLM还可以通过提供所需的非法信息而具有双重用途潜力，导致武器扩散[ 75 ]甚至恐怖袭击计划等风险。确保负责任地使用这些LLM，并采取保障措施防止伤害是至关重要的。此外，在现有的工作中，来自人类的反馈对于消除有害输出起着重要的作用。</p>
+<h3 id="privacy"><a class="markdownIt-Anchor" href="#privacy"></a> Privacy</h3>
+<p>LLMs可能面临严重的安全问题。例如，用户隐私问题。据报道，三星公司的员工在无意间泄露顶级机密数据时，使用ChatGPT处理他们的工作，包括新程序本身的源代码、与硬件相关的内部会议纪要等。意大利数据保护机构宣布，ChatGPT的开发者OpenAI非法收集个人用户数据，导致意大利成为第一个因隐私问题而禁止ChatGPT的政府[ 1 ]。</p>
+<h1 id="总结大模型的挑战与未来"><a class="markdownIt-Anchor" href="#总结大模型的挑战与未来"></a> 总结——大模型的挑战与未来</h1>
+<p>近年来，随着大型语言模型的发展，自然语言处理领域发生了革命性的变化。有效地使用LLMs需要了解它们的能力，以及各种NLP任务的局限性。本工作为LLMs在下游NLP任务中的应用提供了实践指导。我们首先讨论GPT式和BERT式架构等显著模型及其性能影响因素。然后，我们探讨了将LLMs用于下游任务，包括知识密集型任务、NLU和NLG任务，并提供了成功和局限性的具体实例。该实践指南为LLMs提供了见解，并为在NLP任务中使用LLMs提供了最佳实践。我们希望它能使研究人员和实践者发挥他们的潜力，推动创新。</p>
+<p>接下来，我们对LLMs的未来挑战进行了展望：</p>
+<ul>
+<li><strong>实践验证</strong>：在真实数据集上对所提出的模型进行评估。
+<ul>
+<li>而现有的深度学习模型主要在标准的学术数据集上进行评估，如ImageNet，这些数据集是深度学习发展的里程碑。然而，<strong>标准学术数据集的局限性并不能准确反映真实世界的表现。</strong> 随着模型的发展，在反映现实世界需求的更多样、更复杂和更现实的数据上评估它们至关重要。在真实世界的&quot;数据集&quot;上评估模型，除了学术上的，将提供更严格的测试它们的能力，以及更好地了解它们在现实世界应用中的有效性。这确保了模型能够应对现实世界的挑战并提供实际的解决方案。</li>
+</ul>
+</li>
+<li><strong>模型对齐</strong>：
+<ul>
+<li><strong>确保日益强大和自动的模型与人类的价值和优先事项保持一致是至关重要的。</strong> 必须制定方法，以确保这些模型按照预期的行为进行，并且不会对不理想的结果进行优化。从模型开发过程开始就集成对齐技术是至关重要的。<strong>模型的透明性和可解释性也是评估和确保一致性的重要因素。</strong> 此外，当我们展望未来时，一个更加艰巨的挑战也随之而来：对齐超人系统（aligning superhuman systems）。虽然这项任务目前超出了我们的需求，但重要的是要考虑和准备对齐这种先进系统的潜在影响，因为它们可能会呈现独特的复杂性和伦理问题[ 8、15 ]。</li>
+</ul>
+</li>
+<li><strong>安全隐患</strong>：Safety Alignment：安全对齐
+<ul>
+<li>虽然讨论人工智能存在的风险很重要，但需要进行具体的研究，以确保高级人工智能的安全发展。这包括可解释性技术、可扩展的监督和治理技术以及模型属性的形式化验证技术。安全不应仅仅被视为模型建立过程中的一个附加部分，而应被视为模型建立过程中不可或缺的一部分。</li>
+</ul>
+</li>
+<li><strong>Performance Prediction with Scaling</strong>
+<ul>
+<li>很难预测随着模型规模和复杂度的急剧增加，模型性能会发生怎样的变化。在扩大规模或开发新的架构后，开发更好地预测模型性能的方法将有助于更有效地利用资源和加快进展。一些可能性包括：训练一个较小的&quot;种子&quot;模型并外推其生长，模拟尺度增加或模型调整的影响，以及在不同尺度下对模型的迭代进行基准测试<strong>以构建缩放规律</strong>。这些可以在模型构建之前提供对模型性能的洞察。（超参数的学习一样？？？，如果将模型规模看成一个超参数的话）</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/09/07/GAT/" rel="prev" title="GAT">
+                  <i class="fa fa-chevron-left"></i> GAT
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/09/18/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0%EF%BC%881%EF%BC%89/" rel="next" title="多模态大模型综述（1）">
+                  多模态大模型综述（1） <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">YNY</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">75k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:08</span>
+  </span>
+</div>
+
+
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.css" integrity="sha256-hLTCMFlKxdNgPXyWlSSxYN0ykJmxxq9Yt3MNfdRGWeA=" crossorigin="anonymous">
+
+
+
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #4D4D4C;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #F7F7F7;
+      background-image: linear-gradient(#F7F7F7, #F7F7F7);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"handsomexiu/comments","repo_id":"R_kgDOJzfTTQ","category":"Announcements","category_id":"DIC_kwDOJzfTTc4CXcBf","mapping":"pathname","data_strict":0,"reactions_enabled":1,"emit_metadata":0,"theme":"light","lang":"zh-CN","crossorigin":"anonymous","input_position":"bottom"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
+
+</body>
+</html>
