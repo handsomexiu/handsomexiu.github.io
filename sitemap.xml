@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://handsomexiu.github.io/2023/09/02/QCNext-%E4%BD%95%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%BB%A3%EF%BC%9F/</loc>
+    <loc>https://handsomexiu.github.io/2023/09/02/QCNext%E4%BD%95%E4%B8%BA%E4%B8%8B%E4%B8%80%E4%BB%A3%EF%BC%9F%E2%80%94%E2%80%94%E5%85%B3%E4%BA%8EQCNext%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BB%8B%E7%BB%8D%E4%BB%A5%E5%8F%8A%E5%85%B3%E4%BA%8E%E2%80%9C%E4%B8%8B%E4%B8%80%E4%BB%A3%E2%80%9D%E7%9A%84%E8%AE%A8%E8%AE%BA/</loc>
     
     <lastmod>2023-10-08</lastmod>
     
@@ -172,13 +172,6 @@
   </url>
   
   <url>
-    <loc>https://handsomexiu.github.io/tags/LLM/</loc>
-    <lastmod>2023-10-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://handsomexiu.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2023-10-08</lastmod>
     <changefreq>weekly</changefreq>
@@ -187,6 +180,13 @@
   
   <url>
     <loc>https://handsomexiu.github.io/tags/%E7%AB%9E%E8%B5%9B/</loc>
+    <lastmod>2023-10-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://handsomexiu.github.io/tags/LLM/</loc>
     <lastmod>2023-10-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -223,14 +223,14 @@
   </url>
   
   <url>
-    <loc>https://handsomexiu.github.io/categories/LLM/</loc>
+    <loc>https://handsomexiu.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2023-10-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://handsomexiu.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
+    <loc>https://handsomexiu.github.io/categories/LLM/</loc>
     <lastmod>2023-10-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
