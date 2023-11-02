@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"handsomexiu.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null,"show_result":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"giscus","storage":true,"lazyload":false,"nav":null,"activeClass":"giscus"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":"ture","trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这篇blog主要是对大模型部署（chatglm2-6b）的一些学习。该部署还结合了向量数据库，一定程度上实现了RAG。一下是学习笔记：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大模型+知识库部署学习1">
+<meta property="og:url" content="https://handsomexiu.github.io/2023/11/02/%E5%A4%A7%E6%A8%A1%E5%9E%8B-%E7%9F%A5%E8%AF%86%E5%BA%93%E9%83%A8%E7%BD%B2%E5%AD%A6%E4%B9%A01/index.html">
+<meta property="og:site_name" content="YNY&#39;s BLOG">
+<meta property="og:description" content="这篇blog主要是对大模型部署（chatglm2-6b）的一些学习。该部署还结合了向量数据库，一定程度上实现了RAG。一下是学习笔记：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-02T08:33:01.000Z">
+<meta property="article:modified_time" content="2023-11-02T08:43:14.457Z">
+<meta property="article:author" content="YNY">
+<meta property="article:tag" content="大模型">
+<meta property="article:tag" content="部署">
+<meta property="article:tag" content="langchain">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://handsomexiu.github.io/2023/11/02/%E5%A4%A7%E6%A8%A1%E5%9E%8B-%E7%9F%A5%E8%AF%86%E5%BA%93%E9%83%A8%E7%BD%B2%E5%AD%A6%E4%B9%A01/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://handsomexiu.github.io/2023/11/02/%E5%A4%A7%E6%A8%A1%E5%9E%8B-%E7%9F%A5%E8%AF%86%E5%BA%93%E9%83%A8%E7%BD%B2%E5%AD%A6%E4%B9%A01/","path":"2023/11/02/大模型-知识库部署学习1/","title":"大模型+知识库部署学习1"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>大模型+知识库部署学习1 | YNY's BLOG</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">YNY's BLOG</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">YOLO</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E9%A1%B5%E8%B5%84%E6%96%99"><span class="nav-number">1.</span> <span class="nav-text"> 网页资料</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text"> docker 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windows-milvus%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.</span> <span class="nav-text"> windows milvus安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#langchainmilvus"><span class="nav-number">1.3.</span> <span class="nav-text"> langchain+Milvus</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E6%88%981"><span class="nav-number">2.</span> <span class="nav-text"> 实战1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#langchainchatglm2-6bfaiss"><span class="nav-number">2.1.</span> <span class="nav-text"> langchain+chatglm2-6B+faiss</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">2.1.1.</span> <span class="nav-text"> 实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.2.</span> <span class="nav-text"> 遇到的问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chatglm2-6b-%E9%83%A8%E7%BD%B2%E5%B0%9D%E8%AF%95"><span class="nav-number">2.2.</span> <span class="nav-text"> chatglm2-6b 部署尝试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%982"><span class="nav-number">2.3.</span> <span class="nav-text"> 实战2</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E7%9A%84%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text"> 不同的向量数据库</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="YNY"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">YNY</p>
+  <div class="site-description" itemprop="description">他强任他强，清风拂山岗</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/handsomexiu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;handsomexiu" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1184817330@qq.com" title="E-Mail → mailto:1184817330@qq.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://handsomexiu.github.io/2023/11/02/%E5%A4%A7%E6%A8%A1%E5%9E%8B-%E7%9F%A5%E8%AF%86%E5%BA%93%E9%83%A8%E7%BD%B2%E5%AD%A6%E4%B9%A01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="YNY">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YNY's BLOG">
+      <meta itemprop="description" content="他强任他强，清风拂山岗">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="大模型+知识库部署学习1 | YNY's BLOG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          大模型+知识库部署学习1
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-11-02 16:33:01 / 修改时间：16:43:14" itemprop="dateCreated datePublished" datetime="2023-11-02T16:33:01+08:00">2023-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index"><span itemprop="name">大模型</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>这篇blog主要是对大模型部署（chatglm2-6b）的一些学习。该部署还结合了向量数据库，一定程度上实现了RAG。一下是学习笔记：</p>
+<span id="more"></span>
+<h1 id="网页资料"><a class="markdownIt-Anchor" href="#网页资料"></a> 网页资料</h1>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/643531454">LangChain + ChatGLM2-6B 搭建个人专属知识库 - 知乎 (zhihu.com)</a><br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/wtl1992/article/details/133846133">LangChain结合milvus向量数据库以及GPT3.5结合做知识库问答之二 —＞代码实现-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/642443742">【Langchain实战】基于langchain和向量数据库解决语料库超过GPT 4k tokens的问题 - 知乎 (zhihu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lgnlgn/article/details/131989563">chatglm2外挂知识库问答的简单实现_相国的博客-CSDN博客</a></p>
+<p>Milvus,Faiss,chromadb<br>
+<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/364923722">笔记︱几款多模态向量检索引擎：Faiss 、milvus、Proxima、vearch、Jina等 - 知乎 (zhihu.com)</a></p>
+<h2 id="docker-安装"><a class="markdownIt-Anchor" href="#docker-安装"></a> docker 安装</h2>
+<p>[Docker安装配置详细步骤【图解】_&gt;&gt;&gt; 安装配置 docker 1. 安装 docker 开始下载 docker 程序 … <a target="_blank" rel="noopener" href="https://blog.csdn.net/robin_sky/article/details/108293692">e-CSDN博客</a></p>
+<h2 id="windows-milvus安装"><a class="markdownIt-Anchor" href="#windows-milvus安装"></a> windows milvus安装</h2>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014196765/article/details/132535007">windows搭建向量数据库milvus_milvus windows-CSDN博客</a><br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/Joeybee/article/details/132790355">Windows系统本地部署向量数据库milvus_milvus windows_Joeybee的博客-CSDN博客</a><br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/cao812755156/article/details/132702155">windows安装向量数据库milvus_milvus windows-CSDN博客</a></p>
+<h2 id="langchainmilvus"><a class="markdownIt-Anchor" href="#langchainmilvus"></a> langchain+Milvus</h2>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/650439406">用Milvus和Xinference本地搭建基于Llama 2-70B的问答系统 - 知乎 (zhihu.com)</a><br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/yangschfly/article/details/105292534">milvus安装及其使用教程_milvus使用-CSDN博客</a></p>
+<h1 id="实战1"><a class="markdownIt-Anchor" href="#实战1"></a> 实战1</h1>
+<h2 id="langchainchatglm2-6bfaiss"><a class="markdownIt-Anchor" href="#langchainchatglm2-6bfaiss"></a> langchain+chatglm2-6B+faiss</h2>
+<p>项目参考链接：<a target="_blank" rel="noopener" href="https://github.com/thomas-yanxin/LangChain-ChatGLM-Webui">thomas-yanxin/LangChain-ChatGLM-Webui: 基于LangChain和ChatGLM-6B等系列LLM的针对本地知识库的自动问答 (github.com)</a></p>
+<p>项目流程<br>
+![](大模型-知识库部署学习1/Pasted image 20231025095313.png)<br>
+要求：<strong>项目需要Python&gt;=3.8.1, 默认已安装torch</strong>，cuda版本高一点比较好<br>
+注意</p>
+<ul>
+<li>安装faiss注意
+<ul>
+<li>正常流程安装faiss，官网conda install -c pytorch faiss-cpu，我用的是pip install faiss-cpu</li>
+<li>但是numpy的班恩不能为1.26.0，我用的是1.22.4
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/jackhh1/article/details/121292267">【精选】【Python库安装填坑】faiss在Windows上的安装问题—from . import _swigfaiss ImportError: DLL load failed: 找不到指定的模块。_faiss cpu安装windows版本_黄水生的博客-CSDN博客</a></li>
+<li>1.21.4对我的panda来说版本太低了</li>
+</ul>
+</li>
+<li>否则会报：ImportError: DLL load failed while importing _swigfaiss: 找不到指定的模块。</li>
+</ul>
+</li>
+<li>pip requirement时注意事项：
+<ul>
+<li><s>需要对gradio进行降级处理<code> pip install gradio==3.10</code></s></li>
+</ul>
+</li>
+</ul>
+<p><mark><strong>总的流程为</strong></mark></p>
+<ol>
+<li>相关文件的下载：1、langchain-chatglm-Webui；2、chatglm2-6b；3、text2word embedding编码器
+<ol>
+<li>下载链接位置：<a target="_blank" rel="noopener" href="https://openi.pcl.ac.cn/Learning-Develop-Union/LangChain-ChatGLM-Webui/datasets">数据集 - LangChain-ChatGLM-Webui - OpenI - 启智AI开源社区提供普惠算力！ (pcl.ac.cn)</a></li>
+</ol>
+</li>
+<li>将知识编码为向量存入到知识库中（向量数据库）
+<ol>
+<li>读取内容</li>
+<li>文本切分</li>
+<li>embedding</li>
+</ol>
+</li>
+<li>将query编码</li>
+<li>搜索</li>
+<li>将检索内容+query一同作为prompt输入给llm</li>
+<li>LLM response</li>
+</ol>
+<h3 id="实验"><a class="markdownIt-Anchor" href="#实验"></a> 实验</h3>
+<p>环境<br>
+python 3.8,torch2.0 cuda 11.8<br>
+显卡：A5000 24G，内存30G，硬盘50<br>
+%% <code>ssh -p 34207 root@region-8.autodl.pro</code><br>
+<code>PNtiy0k3JecZ</code> %%<br>
+上面的ssh和密码是可以变动的</p>
+<ol>
+<li>我是先进入home目录，在home目录下<code>mkdir LLM</code>，在这个文件夹里面进行相关的部署</li>
+<li>git clone <a target="_blank" rel="noopener" href="https://github.com/thomas-yanxin/LangChain-ChatGLM-Webui.git">https://github.com/thomas-yanxin/LangChain-ChatGLM-Webui.git</a>
+<ol>
+<li>将项目文件拷贝到对应的目录中但是不知道为啥总是超时，所以利用mobalxterm手动加载进去的</li>
+<li>利用wget下载embedding模型
+<ol>
+<li>wget -O text2vec-chinese-base.zip ‘<a target="_blank" rel="noopener" href="https://s3.openi.org.cn/opendata/attachment/0/c/0cebbcbc-5e41-4826-9052-718b601790d9?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=1fa9e58b6899afd26dd3%2F20231026%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20231026T121940Z&amp;X-Amz-Expires=86400&amp;X-Amz-SignedHeaders=host&amp;response-content-disposition=attachment%3B%20filename%3D%22text2vec-base-chinese.zip%22&amp;X-Amz-Signature=fc26e7e501d45de3beb5eebfa11c9b2dd35f18ea722d5cbd455dea79528d2284">https://s3.openi.org.cn/opendata/attachment/0/c/0cebbcbc-5e41-4826-9052-718b601790d9?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=1fa9e58b6899afd26dd3%2F20231026%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20231026T121940Z&amp;X-Amz-Expires=86400&amp;X-Amz-SignedHeaders=host&amp;response-content-disposition=attachment%3B filename%3D&quot;text2vec-base-chinese.zip&quot;&amp;X-Amz-Signature=fc26e7e501d45de3beb5eebfa11c9b2dd35f18ea722d5cbd455dea79528d2284</a>’
+<ol>
+<li>-O 是下载到指定文件名</li>
+<li>这里的链接一定要加英文的双引号不然会报错：‘’</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>同样利用wget下载LLM：chatglm2-6b
+<ol>
+<li>wget -O chatglm-6b.zip ‘<a target="_blank" rel="noopener" href="https://s3.openi.org.cn/opendata/attachment/c/8/c84eb2d7-fcb7-4d4e-8fe5-b1f8e6186fc3?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=1fa9e58b6899afd26dd3%2F20231026%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20231026T125738Z&amp;X-Amz-Expires=86400&amp;X-Amz-SignedHeaders=host&amp;response-content-disposition=attachment%3B%20filename%3D%22chatglm2-6b.zip%22&amp;X-Amz-Signature=bb9cb321062ed560c68e64fa61e2303474f6d3af27a3317fc2bd363d4a4115bb">https://s3.openi.org.cn/opendata/attachment/c/8/c84eb2d7-fcb7-4d4e-8fe5-b1f8e6186fc3?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=1fa9e58b6899afd26dd3%2F20231026%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20231026T125738Z&amp;X-Amz-Expires=86400&amp;X-Amz-SignedHeaders=host&amp;response-content-disposition=attachment%3B filename%3D&quot;chatglm2-6b.zip&quot;&amp;X-Amz-Signature=bb9cb321062ed560c68e64fa61e2303474f6d3af27a3317fc2bd363d4a4115bb</a>’</li>
+</ol>
+</li>
+<li>在unzip -d text2vec-chinese-base text2vec-chinese-base.zip，LLM同理
+<ol>
+<li>将zip文件夹解压到指定文件夹中</li>
+<li><code>-d</code>选项用于指定解压缩后文件的目标目录</li>
+</ol>
+</li>
+<li>由于本电脑的git clone存在问题，换了台电脑。不知道为什么总是git clone 不了。
+<ol>
+<li>如果是在太慢了一个一个安装，将requirements.txt中的拿出来一个一个安装</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="遇到的问题"><a class="markdownIt-Anchor" href="#遇到的问题"></a> 遇到的问题</h3>
+<ol>
+<li>gradio还是要为3.23.0，但都会遇到问题
+<ol>
+<li>得装一个frpc击穿网络？</li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/unp/article/details/131479915">【Gradio】Could not create share link-CSDN博客</a></li>
+<li>由于wget也会失败建议windows本地建完然后上传到linux的gradio文件夹中
+<ol>
+<li>我用gradio3.10版本最后会报错：*** Failed to connect to ec2.gradio.app:22: [Errno 110] Connection timed out</li>
+<li>我用gradio 3.23版本最后会是无法创建share link</li>
+<li>然后waget frpc那个还无法waget请问如何结局</li>
+<li>记得对frpc_linux_amd64_v0.2进行执行能力赋予 chmod +x</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>模型无法加载
+<ol>
+<li>始终无法加载</li>
+</ol>
+</li>
+<li>实验失败</li>
+</ol>
+<h2 id="chatglm2-6b-部署尝试"><a class="markdownIt-Anchor" href="#chatglm2-6b-部署尝试"></a> chatglm2-6b 部署尝试</h2>
+<p>ssh -p 18186 <a href="mailto:root@region-8.autodl.pro">root@region-8.autodl.pro</a><br>
+Fa+uIT7ETyJK</p>
+<p>具体同上：先git clone 然后 wget  然后再unzip等<br>
+上述网站所提供的chatglm2的链接有一定问题，虽说可以用，但是会报错</p>
+<h2 id="实战2"><a class="markdownIt-Anchor" href="#实战2"></a> 实战2</h2>
+<p>得先安装：pip install chromadb</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1t8411y7fp?p=1&amp;vd_source=d237bc8ab6a97ab833d85c05e1fe708b">01_ChatGLM环境部署_哔哩哔哩_bilibili</a><br>
+langchain+chatglm+chroma<br>
+试试这个教程</p>
+<ol>
+<li>
+<p>大模型部署，这里作者尝试了web_demo和api，这里的实践采用的是通过chatglm api分配的本地url来进行实验</p>
+<ol>
+<li>
+<p><a target="_blank" rel="noopener" href="http://xn--chatglmapi-dj2p91go4kov0f6ivcvp3cry0a.py">先运行chatglm文件下的api.py</a></p>
+</li>
+<li>
+<pre class="highlight"><code class="python"><span class="keyword">from</span> langchain.llms <span class="keyword">import</span> ChatGLM
+<span class="comment"># 创建llm</span>
+llm = ChatGLM(
+    endpoint=<span class="string">&#x27;http://127.0.0.1:8000&#x27;</span>,//api分配的url
+    max_token=<span class="number">80000</span>,
+    top_p=<span class="number">0.9</span>
+)
+&lt;!--code￼<span class="number">0</span>--&gt;
+
+<span class="keyword">from</span> langchain.document_loaders <span class="keyword">import</span> DirectoryLoader
+<span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> CharacterTextSplitter
+<span class="keyword">def</span> <span class="title function_">load_documents</span>(<span class="params">directory=<span class="string">&quot;books&quot;</span></span>):
+    <span class="string">&quot;&quot;&quot;
+    加载books下的文件，进行拆分
+    :param directory:
+    :return:
+    &quot;&quot;&quot;</span>
+    loader = DirectoryLoader(directory)
+    documents = loader.load()
+    text_spliter = CharacterTextSplitter(chunk_size=<span class="number">256</span>, chunk_overlap=<span class="number">0</span>)
+    split_docs = text_spliter.split_documents(documents)
+    <span class="keyword">return</span> split_docs
+&lt;!--code￼<span class="number">1</span>--&gt;
+
+
+
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+<ul>
+<li>
+<p>存储</p>
+<ul>
+<li>
+<pre class="highlight"><code class="python"><span class="comment">#这里用的是chorma</span>
+<span class="comment"># 加载数据库</span>
+<span class="keyword">from</span> langchain.vectorstores <span class="keyword">import</span> Chroma
+<span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="string">&#x27;VectorStore&#x27;</span>):
+    documents = load_documents()
+    db = store_chroma(documents, embeddings)
+<span class="keyword">else</span>:
+    db = Chroma(persist_directory=<span class="string">&#x27;VectorStore&#x27;</span>, embedding_function=embeddings)
+&lt;!--code￼<span class="number">2</span>--&gt;
+
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<ol start="4">
+<li>
+<p>加一个web_ui，用的是gradio,简易版本</p>
+<ol>
+<li>
+<pre class="highlight"><code class="python"><span class="keyword">import</span> gradio <span class="keyword">as</span> gr
+<span class="keyword">def</span> <span class="title function_">chat</span>(<span class="params">question,history</span>):
+    response=qa.run(question)<span class="comment">#这里也可以加入history</span>
+    <span class="keyword">return</span> response
+
+demo = gr.ChatTnterface(chat)
+demo.launch(inbrowser=<span class="literal">True</span>)
+&lt;!--code￼<span class="number">3</span>--&gt;
+
+<span class="number">1.</span> yeild：https://zhuanlan.zhihu.com/p/<span class="number">268605982</span>
+   <span class="number">1.</span> `<span class="keyword">yield</span>`的函数则返回一个可迭代的 generator（生成器）对象，你可以使用<span class="keyword">for</span>循环或者调用<span class="built_in">next</span>()方法遍历生成器对象来提取结果。
+
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>输入是中文输出是英文+中文，这里得好好修改。langchain的prompt是英文。由于chatglm比较小，我们可以不用langchain做最后的回答，自己做最后的回答，自己去注入一些prompt。</p>
+<ol>
+<li>还可以将一些比较好的对话搜集，作为prompt，使得模型的输出更加的稳定</li>
+</ol>
+</li>
+</ol>
+<p>额外的补充</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.embeddings.openai <span class="keyword">import</span> OpenAIEmbeddings</span><br><span class="line"><span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> CharacterTextSplitter</span><br><span class="line"><span class="keyword">from</span> langchain.vectorstores <span class="keyword">import</span> Chroma</span><br><span class="line"><span class="keyword">from</span> langchain.document_loaders <span class="keyword">import</span> TextLoader</span><br><span class="line"></span><br><span class="line">loader = TextLoader(<span class="string">&quot;../../../state_of_the_union.txt&quot;</span>)</span><br><span class="line">documents = loader.load()</span><br><span class="line">text_splitter = CharacterTextSplitter(chunk_size=<span class="number">1000</span>, chunk_overlap=<span class="number">0</span>)</span><br><span class="line">docs = text_splitter.split_documents(documents)</span><br><span class="line"></span><br><span class="line">embeddings = OpenAIEmbeddings()</span><br><span class="line"></span><br><span class="line">db = Chroma.from_documents(docs, embeddings)</span><br><span class="line">query = <span class="string">&quot;What did the president say about Ketanji Brown Jackson&quot;</span></span><br><span class="line">docs = db.similarity_search(query)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(docs))</span><br><span class="line"><span class="built_in">print</span>(docs[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(docs[<span class="number">0</span>]))</span><br><span class="line"><span class="built_in">print</span>(docs[<span class="number">0</span>].page_content)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(docs[<span class="number">0</span>].page_content))</span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">此时的docs是list</span></span><br><span class="line"><span class="string">docs[0]这个是：&lt;class &#x27;langchain.schema.document.Document&#x27;&gt;</span></span><br><span class="line"><span class="string">docs[0].page_content：这个是&lt;class &#x27;str&#x27;&gt;</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<h1 id="不同的向量数据库"><a class="markdownIt-Anchor" href="#不同的向量数据库"></a> 不同的向量数据库</h1>
+<p>faiss专注于相似性搜索，milvus除了相似性搜索还有数据库管理</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># milvus</span></span><br><span class="line"><span class="keyword">from</span> pymilvus <span class="keyword">import</span> connections, db</span><br><span class="line">conn = connections.connect(host=<span class="string">&quot;127.0.0.1&quot;</span>, port=<span class="number">19530</span>)<span class="comment">#连接向量数据库</span></span><br><span class="line">database = db.create_database(<span class="string">&quot;sample_db&quot;</span>)<span class="comment"># 创建向量数据库</span></span><br><span class="line"><span class="comment">#切换和显示db</span></span><br><span class="line">db.using_database(<span class="string">&quot;sample_db&quot;</span>)</span><br><span class="line">db.list_database()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#faiss</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> faiss</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例向量数据</span></span><br><span class="line">data = np.random.rand(<span class="number">1000</span>, <span class="number">128</span>).astype(<span class="string">&#x27;float32&#x27;</span>)</span><br><span class="line">index = faiss.IndexFlatL2(<span class="number">128</span>)  <span class="comment"># 创建一个L2距离度量的索引</span></span><br><span class="line">index.add(data)  <span class="comment"># 将数据添加到索引</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#使用write_index方法将索引保存到磁盘：</span></span><br><span class="line">faiss.write_index(index, <span class="string">&quot;my_index.index&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#要加载之前保存的索引，使用read_index方法：</span></span><br><span class="line">loaded_index = faiss.read_index(<span class="string">&quot;my_index.index&quot;</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Chroma</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">store_chroma</span>(<span class="params">docs, embeddings, persist_directory=<span class="string">&quot;VectorStore&quot;</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    讲文档向量化，存入向量数据库</span></span><br><span class="line"><span class="string">    :param docs:</span></span><br><span class="line"><span class="string">    :param embeddings:</span></span><br><span class="line"><span class="string">    :param persist_directory:</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    db = Chroma.from_documents(docs, embeddings, persist_directory=persist_directory)</span><br><span class="line">    db.persist()<span class="comment">#存储为sqlite3</span></span><br><span class="line">    <span class="keyword">return</span> db</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载数据库</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="string">&#x27;VectorStore&#x27;</span>):</span><br><span class="line">    documents = load_documents()</span><br><span class="line">    db = store_chroma(documents, embeddings)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    db = Chroma(persist_directory=<span class="string">&#x27;VectorStore&#x27;</span>, embedding_function=embeddings)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/416897269">(1 封私信 / 6 条消息) sqlite数据库的三种后缀（.db .db3 .sqlite）有什么区别？ - 知乎 (zhihu.com)</a></li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/364923722">笔记︱几款多模态向量检索引擎：Faiss 、milvus、Proxima、vearch、Jina等 - 知乎 (zhihu.com)</a></p>
+<p>其中个人milvus使用起来相对麻烦一点，但是milvus提供了可视化的管理工具，且功能更加强大，chromadb使用起来简单，其中向量保存的文件格式为sqlite3，也可以利用数据库软件进行可视化，faiss的保存文件格式是index，没找到相关可视化软件，不太容易后期的维护。这三种数据库都支持本地部署。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag"># 大模型</a>
+              <a href="/tags/%E9%83%A8%E7%BD%B2/" rel="tag"># 部署</a>
+              <a href="/tags/langchain/" rel="tag"># langchain</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/10/18/langchain-%E5%90%B4%E6%81%A9%E8%BE%BE/" rel="prev" title="langchain-吴恩达">
+                  <i class="fa fa-chevron-left"></i> langchain-吴恩达
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">YNY</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">123k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:52</span>
+  </span>
+</div>
+
+
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.css" integrity="sha256-hLTCMFlKxdNgPXyWlSSxYN0ykJmxxq9Yt3MNfdRGWeA=" crossorigin="anonymous">
+
+
+
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #4D4D4C;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #F7F7F7;
+      background-image: linear-gradient(#F7F7F7, #F7F7F7);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"handsomexiu/comments","repo_id":"R_kgDOJzfTTQ","category":"Announcements","category_id":"DIC_kwDOJzfTTc4CXcBf","mapping":"pathname","data_strict":0,"reactions_enabled":1,"emit_metadata":0,"theme":"light","lang":"zh-CN","crossorigin":"anonymous","input_position":"bottom"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
+
+</body>
+</html>
